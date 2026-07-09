@@ -1,0 +1,559 @@
+<!doctype html>
+<html class="dark" lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<title>Caled Boukari — Ingénieur du son (Cinéma &amp; Live)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@300;400;500;600&amp;display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0e0e10",
+                    "error": "#ffb4ab",
+                    "inverse-surface": "#e4e2e4",
+                    "inverse-on-surface": "#303032",
+                    "primary-fixed": "#ffddbb",
+                    "secondary-fixed-dim": "#68d3ff",
+                    "surface-variant": "#353437",
+                    "on-primary": "#482900",
+                    "on-tertiary-fixed-variant": "#00531a",
+                    "on-secondary": "#003546",
+                    "tertiary-fixed": "#6cff82",
+                    "on-secondary-fixed-variant": "#004d64",
+                    "surface-container-low": "#1b1b1d",
+                    "surface-container": "#1f1f21",
+                    "on-surface": "#e4e2e4",
+                    "surface-container-high": "#2a2a2c",
+                    "on-primary-fixed-variant": "#673d00",
+                    "error-container": "#93000a",
+                    "on-primary-container": "#673d00",
+                    "on-secondary-fixed": "#001f2a",
+                    "primary-container": "#ff9f0a",
+                    "tertiary-container": "#2dcf56",
+                    "primary-fixed-dim": "#ffb868",
+                    "secondary": "#68d3ff",
+                    "surface-tint": "#ffb868",
+                    "on-error": "#690005",
+                    "tertiary-fixed-dim": "#47e266",
+                    "surface-bright": "#39393b",
+                    "on-tertiary-container": "#00521a",
+                    "primary": "#ffc688",
+                    "on-secondary-container": "#002e3d",
+                    "outline": "#a28d79",
+                    "surface-container-highest": "#353437",
+                    "outline-variant": "#544433",
+                    "on-tertiary-fixed": "#002106",
+                    "surface": "#131315",
+                    "inverse-primary": "#885200",
+                    "on-surface-variant": "#dac3ad",
+                    "secondary-fixed": "#bee9ff",
+                    "background": "#131315",
+                    "tertiary": "#53ec6f",
+                    "secondary-container": "#139cc7",
+                    "on-tertiary": "#003910",
+                    "surface-dim": "#131315",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed": "#2b1700",
+                    "on-background": "#e4e2e4"
+            },
+            "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+            "spacing": { "md": "24px", "base": "8px", "container-max": "1280px", "sm": "12px", "gutter": "24px", "xs": "4px", "lg": "48px", "xl": "80px" },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Space Grotesk"], "label-sm": ["JetBrains Mono"],
+                    "body-md": ["Geist"], "headline-md": ["Space Grotesk"], "headline-lg": ["Space Grotesk"],
+                    "label-md": ["JetBrains Mono"], "body-lg": ["Geist"], "display-lg": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "1.0", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                    "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #131315; color: #e4e2e4; -webkit-font-smoothing: antialiased; }
+        .technical-border { border: 1px solid #2C2C2E; }
+        .glow-amber:hover { box-shadow: 0 0 15px rgba(255, 198, 136, 0.3); }
+        .led-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(0.9); } }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+        .delay-100 { animation-delay: 0.1s; } .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; } .delay-500 { animation-delay: 0.5s; }
+
+        #wave-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.4; }
+
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background-color: #ffc688; transition: width 0.3s ease; }
+        .nav-link:hover::after { width: 100%; }
+
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+        .studio-border { border: 1px solid #2C2C2E; }
+        .studio-glow:hover { box-shadow: 0 0 12px rgba(255, 198, 136, 0.3); border-color: #ffc688; }
+        .led-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .led-active { background-color: #53ec6f; box-shadow: 0 0 8px #53ec6f; }
+        .led-idle { background-color: #353437; }
+        .module-header { background: #1b1b1d; border-bottom: 1px solid #2C2C2E; padding: 8px 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #a28d79; }
+    </style>
+</head>
+<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<canvas id="wave-background"></canvas>
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky z-50 bg-surface-dim/80 border-b border-outline-variant/30 backdrop-blur-md transition-all duration-300">
+<div class="flex justify-between items-center h-16 px-md max-w-container-max mx-auto">
+<div class="font-headline-md text-headline-md text-primary tracking-tighter uppercase font-bold cursor-pointer hover:scale-105 transition-transform">Caled Boukari</div>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors duration-200" href="#experiences">Expériences</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors duration-200" href="#showreel">Showreel</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors duration-200" href="#competences">Compétences</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors duration-200" href="#contact">Contact</a>
+</nav>
+<button class="bg-primary-container text-on-primary-container px-md py-xs font-label-md text-label-md rounded uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all cursor-pointer" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Hire Me</button>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden border-b border-outline-variant">
+<div class="relative z-10 max-w-container-max mx-auto px-md w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-8 animate-fade-in-up">
+<div class="flex items-center gap-base mb-md">
+<span class="w-2 h-2 rounded-full bg-tertiary led-pulse"></span>
+<span class="font-label-md text-label-md text-tertiary uppercase tracking-widest">Available for Hire</span>
+<span class="text-outline-variant">|</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Lomé, Togo</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-md">Engineering <span class="text-primary">Sound</span><br/>for Cinema &amp; Live.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-lg delay-100 opacity-0 animate-fade-in-up">
+                        Technicien du son spécialisé en prise de son, montage et mixage pour le cinéma et les performances en direct. Une trajectoire forgée au Togo et affinée sur des projets menés avec des organisations françaises et allemandes.
+                    </p>
+<div class="flex flex-wrap gap-base delay-200 opacity-0 animate-fade-in-up">
+<div class="px-md py-sm technical-border bg-surface-container/50 hover:bg-surface-container-high transition-colors hover:border-primary/50 group"><span class="font-label-sm text-label-sm text-outline-variant block mb-1 uppercase group-hover:text-primary transition-colors">Spécialisation</span><span class="font-body-md text-body-md text-on-surface">Tournages &amp; Post-prod</span></div>
+<div class="px-md py-sm technical-border bg-surface-container/50 hover:bg-surface-container-high transition-colors hover:border-primary/50 group"><span class="font-label-sm text-label-sm text-outline-variant block mb-1 uppercase group-hover:text-primary transition-colors">Expertise</span><span class="font-body-md text-body-md text-on-surface">Théâtre &amp; Live</span></div>
+<div class="px-md py-sm technical-border bg-surface-container/50 hover:bg-surface-container-high transition-colors hover:border-primary/50 group"><span class="font-label-sm text-label-sm text-outline-variant block mb-1 uppercase group-hover:text-primary transition-colors">Réseau</span><span class="font-body-md text-body-md text-on-surface">CANAL+ &amp; ONACIG</span></div>
+</div>
+</div>
+<!-- 3D Sculpture Container -->
+<div class="md:col-span-4 hidden md:block opacity-0 animate-fade-in-up delay-300">
+<div class="relative aspect-[3/4] technical-border bg-surface-container/30 overflow-hidden group" id="three-container">
+<div class="absolute bottom-md left-md z-10"><span class="font-label-sm text-label-sm text-primary uppercase bg-background/80 px-2 py-1">Ingénieur du son</span></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Showreel Section -->
+<section class="py-xl bg-surface-container-lowest/50" id="showreel">
+<div class="max-w-container-max mx-auto px-md">
+<div class="flex flex-col md:flex-row justify-between items-end mb-lg gap-base reveal">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-[0.2em] mb-base block">Showreel</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Selected Works</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm text-right">Visualiser le son à travers l'excellence cinématographique et la dynamique de la scène live.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Project 1 -->
+<a class="group relative technical-border bg-surface-container/40 overflow-hidden cursor-pointer reveal delay-100" href="https://vimeo.com/share/4c7766c4-9c98-4a17-a846-f3413501a911?share=copy&fl=ip&fe=ec" target="_blank" rel="noopener">
+<div class="aspect-video relative overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqgbID6yDUd89Z4eIRrSQFMJVSgRvzZ1xDguWYMuBpJZ00TuQ-zjPJ02keapME24SwUcmrTEUIyRILaRhsTY6yy2Fm1uXtqkhh3x9jSa3mHqWoRaqGqyO4nH9bUj_45bYFj3WSWcTfU9iOTQpP-fwnjihBpsT6LQK9O8-Ci-H8uDejygQyxjT8neZALkmREwGMrAabmfHpMsDyk4pRfHUb-iIQKFCikGtcHQi62axKNGGcPwerHsTp')"></div>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-display-lg text-primary scale-90 group-hover:scale-100 transition-transform duration-300">play_circle</span></div>
+</div>
+<div class="p-md flex justify-between items-center border-t border-outline-variant/30">
+<div><h3 class="font-headline-md text-headline-md text-on-surface">SIFA — Version finale</h3><p class="font-label-md text-label-md text-on-surface-variant">Long-métrage fiction · 2024</p></div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-all group-hover:translate-x-1 group-hover:-translate-y-1">arrow_outward</span>
+</div>
+</a>
+<!-- Project 2 -->
+<a class="group relative technical-border bg-surface-container/40 overflow-hidden cursor-pointer reveal delay-200" href="https://vimeo.com/share/23f798bf-ff64-418d-9ac0-acaf66de797c?share=copy&fl=ip&fe=ec" target="_blank" rel="noopener">
+<div class="aspect-video relative overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDQToJ2SDY0O1QUjFWqfMCrPCXkoNi4LidmJlg6NSCNoFfLVONhKOXYC9M9P1pOPGqUJz5f0yIM-8cmW07iTJvYCQbvwko57aRLMoxoWLQJDEPJWHLyMoP_ssEcffM6q7HUUTI14C9C_2llWqKXOdiZEDlXqP_b4AHuQWGzWU0i3dqqE9mVq6L6aN1kMltD4pELhNDB1C7KEeIFgZqWIbBxgqB8Km8pBJGObX-4nySP4blFz1ccHXDP')"></div>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-display-lg text-primary scale-90 group-hover:scale-100 transition-transform duration-300">play_circle</span></div>
+</div>
+<div class="p-md flex justify-between items-center border-t border-outline-variant/30">
+<div><h3 class="font-headline-md text-headline-md text-on-surface">L'ordure</h3><p class="font-label-md text-label-md text-on-surface-variant">Prise de son plateau · Togo</p></div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-all group-hover:translate-x-1 group-hover:-translate-y-1">arrow_outward</span>
+</div>
+</a>
+<!-- Project 3 -->
+<a class="group relative technical-border bg-surface-container/40 overflow-hidden cursor-pointer reveal delay-300" href="https://vimeo.com/share/85069dc2-f373-4ff8-9f44-47a1a0bfe447?share=copy&fl=ip&fe=ec" target="_blank" rel="noopener">
+<div class="aspect-video relative overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB_-gB0SqH9V-fIohFImX-KMnEHnqa1-3v2wKvnlIdm8lN_mfNgL9tb0xDUqTSu-Pce2bRQd2US03zpFQg-QOmBJ1201sn1YiZUiA0Cw07ejPu7qA-kR3Xwj2tFbDZdxVlgYIiegEqPux9ezxkUGbrZH2zczGtkErV6kjkSr-mONzVHG8xWqMwKgY0tkmRe3842Idn773j4tA87ENmq-VKfpgIGUFIyZOUpLrhDQeOFsTKNzRCOmXjV')"></div>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-display-lg text-primary scale-90 group-hover:scale-100 transition-transform duration-300">play_circle</span></div>
+</div>
+<div class="p-md flex justify-between items-center border-t border-outline-variant/30">
+<div><h3 class="font-headline-md text-headline-md text-on-surface">EOL</h3><p class="font-label-md text-label-md text-on-surface-variant">Directeur Son / Live · VOSTFR</p></div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-all group-hover:translate-x-1 group-hover:-translate-y-1">arrow_outward</span>
+</div>
+</a>
+<!-- Project 4 -->
+<a class="group relative technical-border bg-surface-container/40 overflow-hidden cursor-pointer reveal delay-500" href="https://vimeo.com/share/f3f47667-4644-421c-843a-d5fe33bb0bd1?share=copy&fl=sv&fe=ci" target="_blank" rel="noopener">
+<div class="aspect-video relative overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2z8fmSVYhELgjAy33BTf1LhhQKDX0cFEFRMJQOEWRjmyKGx_-DBvly89NPhREZPjeEeu6TxgX_8XX4O-uNHfHpCaaSjlPIpHdvopbN27SnP-mNd5CGBDrq0oiZza_J_XIQSXuUD7T6CWxHX0aNMgsuZcrjXGRxtkunYqJ_-GELzIniwWROSdPT5F60nRR33k_5C3uYV_jq63iDHqlJ0MxkUlBYw3uKMlOuSbk9CPjIWTFi3mz7n12')"></div>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-display-lg text-primary scale-90 group-hover:scale-100 transition-transform duration-300">play_circle</span></div>
+</div>
+<div class="p-md flex justify-between items-center border-t border-outline-variant/30">
+<div><h3 class="font-headline-md text-headline-md text-on-surface">Le Coup de Grâce</h3><p class="font-label-md text-label-md text-on-surface-variant">Bande-annonce · Post-Production</p></div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-all group-hover:translate-x-1 group-hover:-translate-y-1">arrow_outward</span>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- Experiences Section -->
+<section class="py-xl bg-background/50" id="experiences">
+<div class="max-w-container-max mx-auto px-md">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface sticky top-24">Professional<br/><span class="text-secondary">Trajectory</span></h2>
+<div class="mt-md space-y-md">
+<div class="technical-border p-md bg-surface-container-low/80 hover:bg-surface-container-high transition-all hover:border-tertiary/40 group">
+<span class="material-symbols-outlined text-tertiary mb-base group-hover:scale-110 transition-transform">verified</span>
+<p class="font-body-md text-body-md text-on-surface">Dante Certified Specialist</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Niveaux 1, 2 et 3</p>
+</div>
+<div class="technical-border p-md bg-surface-container-low/80">
+<span class="material-symbols-outlined text-secondary mb-base">language</span>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-xs">Langues</p>
+<p class="font-body-md text-body-md text-on-surface">Français (courant) · Anglais (courant) · Allemand (B2)</p>
+</div>
+</div>
+</div>
+<div class="md:col-span-8 space-y-xl">
+<!-- Cinéma -->
+<div>
+<div class="flex items-center gap-base mb-lg">
+<div class="h-px flex-grow bg-outline-variant/30"></div>
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-[0.2em]">Cinéma &amp; Documentaire</h3>
+<div class="h-px w-12 bg-outline-variant/30"></div>
+</div>
+<div class="space-y-sm">
+<div class="flex flex-col md:flex-row justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-primary/40 group reveal"><div><h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">SIFA</h4><p class="font-body-md text-body-md text-on-surface-variant">Ingénieur du son &amp; mixage — long-métrage fiction</p></div><span class="font-label-md text-label-md text-primary mt-base md:mt-0 opacity-70 group-hover:opacity-100 transition-opacity">2024 · Togo</span></div>
+<div class="flex flex-col md:flex-row justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-primary/40 group reveal"><div><h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Une fiancée à la barre</h4><p class="font-body-md text-body-md text-on-surface-variant">Post-Production Manager — ADR, traitement du son, mixage</p></div><span class="font-label-md text-label-md text-primary mt-base md:mt-0 opacity-70 group-hover:opacity-100 transition-opacity">2023 · Togo</span></div>
+<div class="flex flex-col md:flex-row justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-primary/40 group reveal"><div><h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Le retour sur la terre des ancêtres</h4><p class="font-body-md text-body-md text-on-surface-variant">Ingénieur du son — long-métrage documentaire</p></div><span class="font-label-md text-label-md text-primary mt-base md:mt-0 opacity-70 group-hover:opacity-100 transition-opacity">2023 · Bénin / Canada</span></div>
+<div class="flex flex-col md:flex-row justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-primary/40 group reveal"><div><h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Togoland Projections</h4><p class="font-body-md text-body-md text-on-surface-variant">Ingénieur du son — documentaire</p></div><span class="font-label-md text-label-md text-primary mt-base md:mt-0 opacity-70 group-hover:opacity-100 transition-opacity">2022 · Togo / France / Allemagne</span></div>
+<div class="flex flex-col md:flex-row justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-primary/40 group reveal"><div><h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Agome Seva, de l'ombre à la lumière</h4><p class="font-body-md text-body-md text-on-surface-variant">Ingénieur du son — documentaire</p></div><span class="font-label-md text-label-md text-primary mt-base md:mt-0 opacity-70 group-hover:opacity-100 transition-opacity">2022 · Togo / Belgique</span></div>
+</div>
+</div>
+<!-- Spectacle -->
+<div>
+<div class="flex items-center gap-base mb-lg">
+<div class="h-px flex-grow bg-outline-variant/30"></div>
+<h3 class="font-label-md text-label-md text-secondary uppercase tracking-[0.2em]">Spectacle &amp; Théâtre</h3>
+<div class="h-px w-12 bg-outline-variant/30"></div>
+</div>
+<div class="space-y-sm">
+<div class="flex flex-col md:flex-row justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-secondary/40 group reveal"><div><h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-secondary transition-colors">Young Confession</h4><p class="font-body-md text-body-md text-on-surface-variant">Assistant son — pièce de théâtre</p></div><span class="font-label-md text-label-md text-secondary mt-base md:mt-0 opacity-70 group-hover:opacity-100 transition-opacity">2024 · Allemagne</span></div>
+<div class="flex flex-col md:flex-row justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-secondary/40 group reveal"><div><h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-secondary transition-colors">Les statues rêvent aussi, vision d'un retour — Acte 2</h4><p class="font-body-md text-body-md text-on-surface-variant">Assistant son — Goethe-Institut &amp; Münchner Kammerspiele</p></div><span class="font-label-md text-label-md text-secondary mt-base md:mt-0 opacity-70 group-hover:opacity-100 transition-opacity">2023 · Burkina Faso</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Skills Section - Bento Grid -->
+<section class="py-xl bg-surface-container-lowest/50" id="competences">
+<div class="max-w-container-max mx-auto px-md">
+<div class="grid grid-cols-1 md:grid-cols-4 grid-rows-auto gap-base">
+<!-- Tech Stack -->
+<div class="md:col-span-2 md:row-span-2 technical-border p-lg bg-surface-container-low/60 flex flex-col justify-between hover:bg-surface-container-high transition-colors group reveal">
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase mb-base block">Software Ecosystem</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-lg">Technical Mastering</h2>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="space-y-base">
+<p class="font-label-md text-label-md text-on-surface-variant border-b border-outline-variant/30 pb-xs">Outils / Logiciels</p>
+<ul class="font-body-md text-body-md text-on-surface space-y-1">
+<li class="flex items-center gap-xs"><span class="w-1 h-1 bg-primary group-hover:scale-150 transition-transform"></span> Avid Pro Tools</li>
+<li class="flex items-center gap-xs"><span class="w-1 h-1 bg-primary group-hover:scale-150 transition-transform"></span> Ableton Live</li>
+<li class="flex items-center gap-xs"><span class="w-1 h-1 bg-primary group-hover:scale-150 transition-transform"></span> Reaper</li>
+<li class="flex items-center gap-xs"><span class="w-1 h-1 bg-primary group-hover:scale-150 transition-transform"></span> Adobe Audition</li>
+</ul>
+</div>
+<div class="space-y-base">
+<p class="font-label-md text-label-md text-on-surface-variant border-b border-outline-variant/30 pb-xs">Métiers du son</p>
+<ul class="font-body-md text-body-md text-on-surface space-y-1">
+<li class="hover:text-primary transition-colors cursor-default">Prise de son</li>
+<li class="hover:text-primary transition-colors cursor-default">Montage son</li>
+<li class="hover:text-primary transition-colors cursor-default">Mixage audio</li>
+<li class="hover:text-primary transition-colors cursor-default">Régie son (spectacle)</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Dante Badge -->
+<div class="md:col-span-2 technical-border p-md bg-surface-container-high/60 border-primary/40 flex items-center gap-md hover:bg-surface-container-highest transition-colors cursor-default reveal">
+<div class="w-16 h-16 rounded-full border-2 border-primary flex items-center justify-center"><span class="font-label-md text-label-md text-primary font-bold group-hover:scale-110 transition-transform">L1-3</span></div>
+<div><h3 class="font-headline-md text-headline-md text-on-surface">Dante Certification</h3><p class="font-body-md text-body-md text-on-surface-variant">Réseau &amp; configurations — niveaux 1, 2, 3</p></div>
+</div>
+<!-- Formation -->
+<div class="technical-border p-md bg-surface-container/60 flex flex-col justify-between hover:bg-surface-container-high transition-colors reveal">
+<span class="material-symbols-outlined text-secondary">school</span>
+<div><h4 class="font-body-lg text-body-lg text-on-surface mt-lg">Formation</h4><p class="font-label-sm text-label-sm text-on-surface-variant">Münchner Kammerspiele · AWUI Media · Festival EMERGENCE</p></div>
+</div>
+<!-- Transmission -->
+<div class="technical-border p-md bg-surface-container/60 flex flex-col justify-between hover:bg-surface-container-high transition-colors reveal">
+<span class="material-symbols-outlined text-secondary">groups</span>
+<div><h4 class="font-body-lg text-body-lg text-on-surface mt-lg">Transmission</h4><p class="font-label-sm text-label-sm text-on-surface-variant">Formateur — CANAL+, ONACIG, ATCNA, WELTFILME</p></div>
+</div>
+<!-- Education -->
+<div class="md:col-span-4 technical-border p-md bg-surface-container-low/60 flex flex-wrap gap-lg items-center hover:bg-surface-container-high transition-colors reveal">
+<span class="font-label-md text-label-md text-outline-variant uppercase">Parcours :</span>
+<div class="flex items-center gap-xs hover:text-primary transition-colors cursor-default"><span class="material-symbols-outlined text-sm text-on-surface-variant">arrow_right</span><span class="font-body-md text-body-md">Münchner Kammerspiele (Munich, 2024)</span></div>
+<div class="flex items-center gap-xs hover:text-primary transition-colors cursor-default"><span class="material-symbols-outlined text-sm text-on-surface-variant">arrow_right</span><span class="font-body-md text-body-md">AWUI Media International (Abidjan, 2020–2022)</span></div>
+<div class="flex items-center gap-xs hover:text-primary transition-colors cursor-default"><span class="material-symbols-outlined text-sm text-on-surface-variant">arrow_right</span><span class="font-body-md text-body-md">Festival EMERGENCE (Lomé, 2015)</span></div>
+<div class="flex items-center gap-xs hover:text-primary transition-colors cursor-default"><span class="material-symbols-outlined text-sm text-on-surface-variant">arrow_right</span><span class="font-body-md text-body-md">Baccalauréat — Économie (Kara, 2014)</span></div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-xl border-t border-outline-variant/30">
+<div class="max-w-container-max mx-auto px-md text-center reveal">
+<h2 class="font-display-lg text-display-lg text-on-surface mb-md">Ready for the <span class="text-primary">Next Project?</span></h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto mb-xl">Basé à Lomé, disponible pour les tournages, la post-production et le live en Afrique et à l'international. Construisons la paysage sonore de votre prochain chef-d'œuvre.</p>
+<div class="flex flex-col md:flex-row justify-center gap-md">
+<a class="px-xl py-md bg-primary-container text-on-primary-container font-headline-md text-headline-md uppercase tracking-widest glow-amber hover:brightness-110 active:scale-95 transition-all rounded-lg" href="mailto:caledboukari@yahoo.com">Engage Me</a>
+<a class="px-xl py-md technical-border bg-surface-container/40 hover:bg-surface-container font-headline-md text-headline-md uppercase tracking-widest transition-all rounded-lg active:scale-95" href="mailto:caledboukari@yahoo.com?subject=CV%20Caled%20Boukari">Download CV</a>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="py-xl bg-surface-container-lowest/50 border-t border-outline-variant/30" id="contact">
+<div class="max-w-container-max mx-auto px-md grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left: Contact Details -->
+<div class="lg:col-span-4 space-y-md reveal">
+<div class="studio-border bg-surface rounded-lg p-md space-y-lg h-full technical-border">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Get in Touch</h3>
+<div class="space-y-md">
+<a class="block group" href="mailto:caledboukari@yahoo.com">
+<div class="p-md bg-surface-container technical-border glow-amber transition-all">
+<p class="font-label-sm text-on-surface-variant uppercase">Email</p>
+<p class="font-body-lg text-primary mt-xs truncate">caledboukari@yahoo.com</p>
+</div>
+</a>
+<a class="block group" href="tel:+22893707051">
+<div class="p-md bg-surface-container technical-border glow-amber transition-all">
+<p class="font-label-sm text-on-surface-variant uppercase">Téléphone</p>
+<p class="font-body-lg text-primary mt-xs">+228 93 70 70 51</p>
+</div>
+</a>
+<a class="block group" href="tel:+22899849707">
+<div class="p-md bg-surface-container technical-border glow-amber transition-all">
+<p class="font-label-sm text-on-surface-variant uppercase">Téléphone (2)</p>
+<p class="font-body-lg text-primary mt-xs">+228 99 84 97 07</p>
+</div>
+</a>
+</div>
+<div class="pt-md space-y-sm">
+<p class="font-label-sm text-on-surface-variant uppercase border-b border-outline-variant pb-2">Disponibilité</p>
+<div class="flex items-center gap-base"><span class="led-indicator led-active"></span><span class="font-body-md">Tournages · Post-production · Théâtre/Live</span></div>
+<div class="flex items-center gap-base opacity-70"><span class="led-indicator led-active"></span><span class="font-body-md">Lomé, Togo — International / Remote</span></div>
+</div>
+</div>
+</div>
+<!-- Right: Contact Form -->
+<div class="lg:col-span-8 reveal">
+<div class="studio-border bg-surface-container-low rounded-lg overflow-hidden technical-border">
+<div class="module-header flex justify-between items-center">
+<span>Message_Inbound_Buffer</span>
+<div class="flex items-center gap-xs"><span class="text-[9px]">ENCRYPTED</span><span class="material-symbols-outlined text-xs">lock</span></div>
+</div>
+<form class="p-md lg:p-lg grid grid-cols-1 md:grid-cols-2 gap-md" id="contact-form">
+<div class="space-y-xs">
+<label class="font-label-sm text-on-surface-variant uppercase">Full Name</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant p-md focus:border-primary focus:ring-0 text-on-surface font-body-md transition-all" placeholder="John Doe" type="text" name="name" required>
+</div>
+<div class="space-y-xs">
+<label class="font-label-sm text-on-surface-variant uppercase">Email Address</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant p-md focus:border-primary focus:ring-0 text-on-surface font-body-md transition-all" placeholder="john@studio.com" type="email" name="email" required>
+</div>
+<div class="md:col-span-2 space-y-xs">
+<label class="font-label-sm text-on-surface-variant uppercase">Project Type</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant p-md focus:border-primary focus:ring-0 text-on-surface font-body-md transition-all" name="project">
+<option>Cinéma / Documentaire</option>
+<option>Théâtre / Live</option>
+<option>Post-Production</option>
+<option>Formation / Atelier</option>
+<option>Autre</option>
+</select>
+</div>
+<div class="md:col-span-2 space-y-xs">
+<label class="font-label-sm text-on-surface-variant uppercase">Your Message</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant p-md focus:border-primary focus:ring-0 text-on-surface font-body-md transition-all resize-none" placeholder="Describe your technical requirements..." rows="6" name="message" required></textarea>
+</div>
+<div class="md:col-span-2 flex justify-between items-center pt-md">
+<button class="bg-primary text-on-primary font-label-md uppercase tracking-widest px-xl py-md hover:brightness-110 active:scale-95 transition-all glow-amber" type="submit">TRANSMIT MESSAGE</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full py-xl bg-surface-container-lowest/80 border-t border-outline-variant/30">
+<div class="flex flex-col md:flex-row justify-between items-center px-md max-w-container-max mx-auto gap-base">
+<div class="flex flex-col gap-xs text-center md:text-left">
+<span class="font-headline-md text-headline-md text-on-surface">Caled Boukari</span>
+<p class="text-secondary font-label-md text-label-md">© 2024 Caled Boukari. Sound Engineering &amp; Acoustic Design.</p>
+</div>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-all underline-offset-4 hover:underline" href="mailto:caledboukari@yahoo.com">Email</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-all underline-offset-4 hover:underline" href="tel:+22893707051">+228 93 70 70 51</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-all underline-offset-4 hover:underline" href="https://vimeo.com/share/4c7766c4-9c98-4a17-a846-f3413501a911" target="_blank" rel="noopener">Vimeo</a>
+</div>
+</div>
+</footer>
+<!-- Scripts -->
+<script>
+        // --- ANIMATION_5: Sound Wave Shader Background (robust sizing) ---
+        (function () {
+            const canvas = document.getElementById('wave-background');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (!gl) return;
+
+            function syncSize() {
+                const w = canvas.clientWidth || window.innerWidth;
+                const h = canvas.clientHeight || window.innerHeight;
+                if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+            }
+            if (typeof ResizeObserver !== 'undefined') new ResizeObserver(syncSize).observe(canvas);
+            syncSize();
+
+            const vs = 'attribute vec2 a_position; varying vec2 v_texCoord; void main(){ v_texCoord = a_position*0.5+0.5; gl_Position = vec4(a_position,0.0,1.0); }';
+            const fs = 'precision highp float; uniform float u_time; uniform vec2 u_resolution; uniform vec2 u_mouse; varying vec2 v_texCoord; void main(){ vec2 uv=v_texCoord; vec2 center=u_mouse/u_resolution; if(length(u_mouse)<0.1) center=vec2(0.5); float d=length(uv-center); float wave=sin(d*20.0-u_time*2.0)*0.5+0.5; wave*=exp(-d*3.0); float noise=sin(uv.x*50.0+u_time)*cos(uv.y*30.0-u_time*0.5); vec3 color1=vec3(0.075,0.075,0.082); vec3 color2=vec3(1.0,0.624,0.039); vec3 finalColor=mix(color1,color2, wave*0.15+noise*0.02); gl_FragColor=vec4(finalColor,1.0); }';
+            function cs(type, src){ const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
+            const prog = gl.createProgram();
+            gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+            gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+            gl.linkProgram(prog);
+            gl.useProgram(prog);
+            const buf = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+            const pos = gl.getAttribLocation(prog, 'a_position');
+            gl.enableVertexAttribArray(pos);
+            gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+            const uTime = gl.getUniformLocation(prog, 'u_time');
+            const uRes = gl.getUniformLocation(prog, 'u_resolution');
+            const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+            let mouse = { x: 0, y: 0 };
+            window.addEventListener('mousemove', (e) => {
+                const r = canvas.getBoundingClientRect();
+                if (r.width && r.height) { mouse.x = ((e.clientX - r.left) / r.width) * canvas.width; mouse.y = (1 - (e.clientY - r.top) / r.height) * canvas.height; }
+            });
+            function render(t){
+                if (typeof ResizeObserver === 'undefined') syncSize();
+                gl.viewport(0,0,canvas.width,canvas.height);
+                if (uTime) gl.uniform1f(uTime, t*0.001);
+                if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+                if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                requestAnimationFrame(render);
+            }
+            render(0);
+        })();
+
+        // --- ANIMATION_6: Three.js 3D Sculpture ---
+        (function () {
+            const container = document.getElementById('three-container');
+            if (!container || typeof THREE === 'undefined') return;
+            const width = container.clientWidth, height = container.clientHeight;
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            const geometry = new THREE.IcosahedronGeometry(1.5, 15);
+            const material = new THREE.MeshPhongMaterial({ color: 0xff9f0a, wireframe: true, transparent: true, opacity: 0.6, emissive: 0xff9f0a, emissiveIntensity: 0.5 });
+            const soundSphere = new THREE.Mesh(geometry, material);
+            scene.add(soundSphere);
+            const light = new THREE.PointLight(0xffffff, 1, 100); light.position.set(5,5,5); scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
+            camera.position.z = 4;
+            const originalPositions = geometry.attributes.position.array.slice();
+
+            function animate() {
+                const time = Date.now() * 0.001;
+                requestAnimationFrame(animate);
+                const positions = geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    const x = originalPositions[i], y = originalPositions[i+1], z = originalPositions[i+2];
+                    const offset = Math.sin(x * 2 + y * 3 + time * 2) * 0.1;
+                    positions[i] = x + (x / 1.5) * offset;
+                    positions[i+1] = y + (y / 1.5) * offset;
+                    positions[i+2] = z + (z / 1.5) * offset;
+                }
+                geometry.attributes.position.needsUpdate = true;
+                soundSphere.rotation.y += 0.005; soundSphere.rotation.z += 0.003;
+                renderer.render(scene, camera);
+            }
+            window.addEventListener('resize', () => {
+                const w = container.clientWidth, h = container.clientHeight;
+                camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
+            });
+            animate();
+        })();
+
+        // --- Header scroll effect ---
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) { header.classList.add('h-14','shadow-2xl','bg-surface-dim/95'); header.classList.remove('h-16'); }
+            else { header.classList.remove('h-14','shadow-2xl','bg-surface-dim/95'); header.classList.add('h-16'); }
+        });
+
+        // --- Smooth scroll ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const id = this.getAttribute('href');
+                if (id.length > 1 && document.querySelector(id)) { e.preventDefault(); document.querySelector(id).scrollIntoView({ behavior: 'smooth' }); }
+            });
+        });
+
+        // --- Scroll reveal ---
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in-view'); io.unobserve(en.target); } });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+        // --- Form micro-interaction + mailto submit ---
+        document.querySelectorAll('input, textarea, select').forEach(input => {
+            const lbl = input.parentElement.querySelector('label');
+            if (!lbl) return;
+            input.addEventListener('focus', () => lbl.classList.add('text-primary'));
+            input.addEventListener('blur', () => lbl.classList.remove('text-primary'));
+        });
+        const form = document.getElementById('contact-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const d = new FormData(form);
+            const subject = encodeURIComponent('Nouveau message — ' + (d.get('name') || ''));
+            const body = encodeURIComponent('Projet: ' + d.get('project') + '\n\n' + d.get('message') + '\n\n— ' + d.get('name') + ' (' + d.get('email') + ')');
+            window.location.href = 'mailto:caledboukari@yahoo.com?subject=' + subject + '&body=' + body;
+        });
+    </script>
+</body>
+</html>
+
+
+
+
