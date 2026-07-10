@@ -1,16 +1,50 @@
-# React + Vite
+# Caled Boukari — Portfolio (Ingénieur du son)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Portfolio personnel de **Caled Boukari**, ingénieur du son spécialisé en prise de son, montage et mixage pour le cinéma, le documentaire et le spectacle vivant (Lomé, Togo — disponible en Afrique et à l'international).
 
-Currently, two official plugins are available:
+## Stack technique
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19** + **Vite 8** (HMR, build rapide)
+- **Tailwind CSS 3** (thème piloté par variables CSS, dark/light)
+- **Three.js** — sphère sonore filaire animée (hero)
+- **WebGL** (shader maison) — fond d'ondes réactif à la souris
+- **Oxlint** pour le lint
 
-## React Compiler
+## Fonctionnalités
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Mode **clair / sombre** (fond noir profond en dark, bascule via `localStorage`)
+- **i18n** intégré : Français, Anglais, Allemand, Espagnol, Portugais
+- Sections : Hero, Showreel (Vimeo), Expériences (cinéma & théâtre), Compétences, Call-to-Action, Contact (formulaire `mailto:` + coordonnées)
+- Animations au scroll (révélation à l'intersection), design « studio / technique »
 
-## Expanding the Oxlint configuration
+## Démarrage
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+npm install
+npm run dev      # serveur de développement
+npm run build    # build de production (dossier dist/)
+npm run preview  # prévisualiser le build
+npm run lint     # oxlint
+```
+
+## Structure
+
+```
+index.html
+src/
+  main.jsx                 # point d'entrée (Theme + I18n providers)
+  App.jsx                  # assemblage des sections
+  index.css                # thème (variables CSS) + utilitaires Tailwind
+  theme/ThemeContext.jsx   # gestion dark/light
+  i18n/                    # traductions + contexte de langue
+  components/              # Navbar, Hero, Showreel, Experiences, Skills,
+                           # CallToAction, Contact, Footer, ShaderBackground,
+                           # ThreeScene, Reveal, ThemeToggle, LanguageSwitcher
+```
+
+## Personnalisation
+
+- **Palette / thème** : `src/index.css` (bloc `:root` pour le dark, `html.light` pour le clair).
+- **Textes & traductions** : `src/i18n/translations.js`.
+- **Projets Showreel** : tableau `PROJECTS` dans `src/components/Showreel.jsx`.
+- **Coordonnées** : `src/components/Contact.jsx` et `src/components/Footer.jsx` (email `caledboukari@yahoo.com`).

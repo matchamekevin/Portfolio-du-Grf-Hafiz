@@ -1,10 +1,11 @@
 import { useI18n } from "../i18n/I18nContext";
+import Reveal from "./Reveal";
 
 export default function CallToAction() {
   const { t } = useI18n();
   return (
     <section className="py-xl border-t border-outline-variant/30">
-      <div className="max-w-container-max mx-auto px-md text-center reveal">
+      <Reveal className="max-w-container-max mx-auto px-md text-center">
         <h2
           className="font-display-lg text-display-lg text-on-surface mb-md"
           dangerouslySetInnerHTML={{ __html: t("cta_title") }}
@@ -24,7 +25,7 @@ export default function CallToAction() {
             {t("cta_cv")}
           </a>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

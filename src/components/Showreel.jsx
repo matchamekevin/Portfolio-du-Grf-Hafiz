@@ -37,7 +37,7 @@ export default function Showreel() {
   return (
     <section className="py-xl bg-surface-container-lowest/50" id="showreel">
       <div className="max-w-container-max mx-auto px-md">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-lg gap-base reveal">
+        <Reveal className="flex flex-col md:flex-row justify-between items-end mb-lg gap-base">
           <div>
             <span className="font-label-sm text-label-sm text-secondary uppercase tracking-[0.2em] mb-base block">
               {t("sr_eyebrow")}
@@ -47,7 +47,7 @@ export default function Showreel() {
           <p className="font-body-md text-body-md text-on-surface-variant max-w-sm text-right">
             {t("sr_desc")}
           </p>
-        </div>
+        </Reveal>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           {PROJECTS.map((p) => (
             <Reveal key={p.title} className={p.delay}>

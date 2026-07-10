@@ -44,10 +44,14 @@ export default function Experiences() {
       <div className="max-w-container-max mx-auto px-md">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
           <div className="md:col-span-4">
-            <h2
-              className="font-headline-lg text-headline-lg text-on-surface sticky top-24"
-              dangerouslySetInnerHTML={{ __html: t("exp_title") }}
-            />
+            <div className="sticky top-24 z-30 relative -mx-3 px-3 pt-10 pb-8 bg-surface backdrop-blur-sm">
+              <h2
+                className="font-headline-lg text-headline-lg text-on-surface"
+                dangerouslySetInnerHTML={{ __html: t("exp_title") }}
+              />
+              <div className="pointer-events-none absolute inset-x-0 -top-40 h-40 bg-gradient-to-t from-surface to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 -bottom-16 h-16 bg-gradient-to-b from-surface to-transparent" />
+            </div>
             <div className="mt-md space-y-md">
               <div className="technical-border p-md bg-surface-container-low/80 hover:bg-surface-container-high transition-all hover:border-tertiary/40 group">
                 <span className="material-symbols-outlined text-tertiary mb-base group-hover:scale-110 transition-transform">verified</span>
