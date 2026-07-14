@@ -96,8 +96,12 @@ export default function ShaderBackground() {
   }, []);
 
   // Re-sync shader colors whenever the theme flips (CSS vars change).
+  // rAF ensures the html class is already applied before we read the vars.
   useEffect(() => {
-    if (applyRef.current) applyRef.current();
+    const id = requestAnimationFrame(() => {
+      if (applyRef.current) applyRef.current();
+    });
+    return () => cancelAnimationFrame(id);
   }, [theme]);
 
   return <canvas id="wave-background" ref={canvasRef} />;

@@ -2,7 +2,7 @@ import { useI18n } from "../i18n/I18nContext";
 import Reveal from "./Reveal";
 
 const SHOTS = [
-  { src: "/image/quelques-images-de-tournages/im1.jpeg", alt: "Tournage", cap: "g_cap1" },
+  { src: "/image/quelques-images-de-tournages/im1.jpeg", alt: "Tournage" },
   { src: "/image/quelques-images-de-tournages/im2.jpeg", alt: "Prise de son", cap: "g_cap2" },
 ];
 
@@ -32,10 +32,12 @@ export default function Gallery() {
                   className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"
                 />
-                <figcaption className="p-sm font-label-sm text-label-sm text-on-surface-variant border-t border-outline-variant/30">
-                  {t(shot.cap)}
-                </figcaption>
               </figure>
+              {shot.cap && (
+                <div className="mt-xl p-md technical-border bg-surface-container/40 font-body-lg text-body-lg text-on-surface-variant text-justify">
+                  {t(shot.cap)}
+                </div>
+              )}
             </Reveal>
           ))}
         </div>

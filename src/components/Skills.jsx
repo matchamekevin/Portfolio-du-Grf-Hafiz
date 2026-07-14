@@ -65,7 +65,7 @@ export default function Skills() {
             <span className="material-symbols-outlined text-secondary">groups</span>
             <div>
               <h4 className="font-body-lg text-body-lg text-on-surface mt-lg">{t("trans_t")}</h4>
-              <p className="font-label-sm text-label-sm text-on-surface-variant">Formateur, CANAL+, le cinéma parle, ATCNA, WELTFILME</p>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">Formateur, CANAL+, <a href="mailto:lecinemaparle@gmail.com" className="text-primary hover:underline">le cinéma parle</a>, ATCNA, WELTFILME</p>
             </div>
           </Reveal>
 

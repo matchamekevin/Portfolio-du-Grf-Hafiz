@@ -30,7 +30,7 @@ export const TRANSLATIONS = {
     opt1: "Cinéma / Documentaire", opt2: "Théâtre / Live", opt3: "Post-Production", opt4: "Formation / Atelier", opt5: "Autre",
     ph_name: "ama de la fontaine", ph_email: "exemple@studio.com", ph_message: "Décrivez vos besoins techniques...",
     footer_copy: "© 2024 Caled Boukari. Ingénierie du son &amp; design acoustique.",
-    g_eyebrow: "Galerie", g_title: "Coulisses de tournage", g_desc: "Quelques instants capturés sur les plateaux et lors des prises de son.", g_cap1: "Coulisses de tournage : son, plateau et équipe en action.", g_cap2: "Prise de son sur le terrain, à Lomé."
+    g_eyebrow: "Galerie", g_title: "Coulisses de tournage", g_desc: "Quelques instants capturés sur les plateaux et lors des prises de son.", g_cap1: "Coulisses de tournage : son, plateau et équipe en action.", g_cap2: "Prise de son sur le terrain. Avant chaque prise, le repérage acoustique dicte le placement : micros directionnels pour isoler la voix au cœur du chaos, hydrophones et capteurs de contact pour révéler la matière vibrante des surfaces. On traque le souffle du vent, le frémissement des foules et le murmure des environnements pour nourrir un tournage mené en conditions réelles, là où la vraie vie devient la bande-son. De cette captation naît une chaîne complète, du montage au traitement et au mixage jusqu'à la régie live, où l'ingénieur du son orchestre en direct le souffle d'une scène, au service du récit cinématographique comme de la scène théâtrale."
   },
   en: {
     nav_showreel: "Showreel", nav_experiences: "Experiences", nav_competences: "Skills", nav_contact: "Contact", nav_hire: "Hire Me",
@@ -61,7 +61,7 @@ export const TRANSLATIONS = {
     opt1: "Cinema / Documentary", opt2: "Theatre / Live", opt3: "Post-Production", opt4: "Training / Workshop", opt5: "Other",
     ph_name: "John Doe", ph_email: "john@studio.com", ph_message: "Describe your technical requirements...",
     footer_copy: "© 2024 Caled Boukari. Sound Engineering &amp; Acoustic Design.",
-    g_eyebrow: "Gallery", g_title: "Behind the Scenes", g_desc: "A few moments captured on set and during sound recording.", g_cap1: "Behind the scenes: sound, set and crew in action.", g_cap2: "Field sound recording, in Lomé."
+    g_eyebrow: "Gallery", g_title: "Behind the Scenes", g_desc: "A few moments captured on set and during sound recording.", g_cap1: "Behind the scenes: sound, set and crew in action.", g_cap2: "Field sound recording. Before each take, acoustic scouting dictates placement: directional mics to isolate the voice amid the chaos, hydrophones and contact sensors to reveal the vibrating matter of surfaces. We chase the breath of the wind, the trembling of crowds and the murmur of environments to feed a shoot in real-world conditions, where real life becomes the soundtrack. From this capture emerges a complete chain, from editing and treatment to mixing and live sound, where the sound engineer orchestrates a scene's pulse in real time, in service of both the cinematic story and the theatrical stage."
   },
   de: {
     nav_showreel: "Showreel", nav_experiences: "Erfahrungen", nav_competences: "Fähigkeiten", nav_contact: "Kontakt", nav_hire: "Anheuern",
@@ -92,7 +92,7 @@ export const TRANSLATIONS = {
     opt1: "Kino / Dokumentarfilm", opt2: "Bühne / Live", opt3: "Post-Produktion", opt4: "Ausbildung / Workshop", opt5: "Sonstiges",
     ph_name: "Max Mustermann", ph_email: "max@studio.de", ph_message: "Beschreiben Sie Ihre technischen Anforderungen...",
     footer_copy: "© 2024 Caled Boukari. Tontechnik &amp; akustisches Design.",
-    g_eyebrow: "Galerie", g_title: "Hinter den Kulissen", g_desc: "Einige Momente von den Sets und während der Tonaufnahmen.", g_cap1: "Hinter den Kulissen: Ton, Set und Team in Aktion.", g_cap2: "Tonaufnahme vor Ort, in Lomé."
+    g_eyebrow: "Galerie", g_title: "Hinter den Kulissen", g_desc: "Einige Momente von den Sets und während der Tonaufnahmen.", g_cap1: "Hinter den Kulissen: Ton, Set und Team in Aktion.", g_cap2: "Tonaufnahme vor Ort. Vor jeder Aufnahme bestimmt die Standortuntersuchung die Positionierung: Richtmikrofone, um die Stimme mitten im Chaos zu isolieren, Hydrophone und Kontaktmikrofone, um die schwingende Beschaffenheit der Oberflächen hörbar zu machen. Wir jagen nach dem Atem des Windes, dem Beben der Menschenmengen und dem Murmeln der Umgebungen, um einen Dreh unter realen Bedingungen zu speisen, in dem das wahre Leben zur Filmmusik wird. Aus dieser Aufnahme entsteht eine vollständige Kette, vom Schnitt über die Bearbeitung und Mischung bis zur Live-Regie, in der der Tonmeister den Puls einer Szene live dirigiert, im Dienste sowohl der filmischen Erzählung als auch der Theaterbühne."
   },
   es: {
     nav_showreel: "Showreel", nav_experiences: "Experiencias", nav_competences: "Habilidades", nav_contact: "Contacto", nav_hire: "Contrátame",
@@ -123,7 +123,7 @@ export const TRANSLATIONS = {
     opt1: "Cine / Documental", opt2: "Teatro / Live", opt3: "Post-Producción", opt4: "Formación / Taller", opt5: "Otro",
     ph_name: "Juan Pérez", ph_email: "juan@studio.es", ph_message: "Describe tus requisitos técnicos...",
     footer_copy: "© 2024 Caled Boukari. Ingeniería de sonido &amp; diseño acústico.",
-    g_eyebrow: "Galería", g_title: "Detrás de cámaras", g_desc: "Algunos momentos capturados en el set y durante la grabación de sonido.", g_cap1: "Detrás de cámaras: sonido, plató y equipo en acción.", g_cap2: "Grabación de sonido en el terreno, en Lomé."
+    g_eyebrow: "Galería", g_title: "Detrás de cámaras", g_desc: "Algunos momentos capturados en el set y durante la grabación de sonido.", g_cap1: "Detrás de cámaras: sonido, plató y equipo en acción.", g_cap2: "Grabación de sonido en el terreno. Antes de cada toma, el reconocimiento acústico dicta la colocación: micrófonos direccionales para aislar la voz en medio del caos, hidrófonos y sensores de contacto para revelar la materia vibrante de las superficies. Perseguimos el aliento del viento, el estremecimiento de las multitudes y el murmullo de los entornos para alimentar un rodaje en condiciones reales, donde la vida auténtica se convierte en la banda sonora. De esta captación nace una cadena completa, del montaje al tratamiento y la mezcla hasta la regie en vivo, en la que el ingeniero de sonido orquesta en directo el pulso de una escena, al servicio tanto de la narración cinematográfica como del escenario teatral."
   },
   pt: {
     nav_showreel: "Showreel", nav_experiences: "Experiências", nav_competences: "Competências", nav_contact: "Contacto", nav_hire: "Contrate-me",
@@ -154,7 +154,7 @@ export const TRANSLATIONS = {
     opt1: "Cinema / Documentário", opt2: "Teatro / Live", opt3: "Pós-Produção", opt4: "Formação / Workshop", opt5: "Outro",
     ph_name: "João Silva", ph_email: "joao@studio.pt", ph_message: "Descreva seus requisitos técnicos...",
     footer_copy: "© 2024 Caled Boukari. Engenharia de som &amp; design acústico.",
-    g_eyebrow: "Galeria", g_title: "Nos bastidores", g_desc: "Alguns momentos capturados nos sets e durante a gravação de som.", g_cap1: "Nos bastidores: som, set e equipe em ação.", g_cap2: "Captação de som no terreno, em Lomé."
+    g_eyebrow: "Galeria", g_title: "Nos bastidores", g_desc: "Alguns momentos capturados nos sets e durante a gravação de som.", g_cap1: "Nos bastidores: som, set e equipe em ação.", g_cap2: "Captação de som no terreno. Antes de cada take, o reconhecimento acústico dita a colocação: microfones direcionais para isolar a voz no meio do caos, hidrofones e sensores de contacto para revelar a matéria vibrante das superfícies. Caçamos a respiração do vento, o estremecer das multidões e o murmúrio dos ambientes para alimentar uma filmagem em condições reais, onde a vida autêntica se torna a banda-sonora. Desta captação nasce uma cadeia completa, da montagem ao tratamento e à mistura até à regie ao vivo, em que o engenheiro de som orquestra em direto o pulsar de uma cena, ao serviço tanto da narrativa cinematográfica como do palco teatral."
   }
 };
 

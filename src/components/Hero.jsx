@@ -4,7 +4,7 @@ import ThreeScene from "./ThreeScene";
 const TAGS = [
   { l: "hero_tag1_l", v: "Tournages & Post-prod" },
   { l: "hero_tag2_l", v: "Théâtre & Live" },
-  { l: "hero_tag3_l", v: "CANAL+ & le cinéma parle" }
+  { l: "hero_tag3_l", v: ["CANAL+ & ", { text: "le cinéma parle", href: "mailto:lecinemaparle@gmail.com" }] }
 ];
 
 export default function Hero() {
@@ -37,7 +37,17 @@ export default function Hero() {
                 <span className="font-label-sm text-label-sm text-on-surface-variant block mb-1 uppercase group-hover:text-primary transition-colors">
                   {t(tag.l)}
                 </span>
-                <span className="font-body-md text-body-md text-on-surface">{tag.v}</span>
+                <span className="font-body-md text-body-md text-on-surface">
+                  {Array.isArray(tag.v)
+                    ? tag.v.map((part, i) =>
+                        typeof part === "string" ? (
+                          part
+                        ) : (
+                          <a key={i} href={part.href} className="text-primary hover:underline">{part.text}</a>
+                        )
+                      )
+                    : tag.v}
+                </span>
               </div>
             ))}
           </div>
