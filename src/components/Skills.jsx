@@ -1,13 +1,14 @@
 import { useI18n } from "../i18n/I18nContext";
 import Reveal from "./Reveal";
+import ParcoursScene from "./ParcoursScene";
 
 const METIERS = ["m1", "m2", "m3", "m4"];
 
 const EDU = [
   "Münchner Kammerspiele (Munich, 2024)",
-  "AWUI Media International (Abidjan, 2020–2022)",
+  "AWUI Media International (Abidjan, 2020 Ã  2022)",
   "Festival EMERGENCE (Lomé, 2015)",
-  "Baccalauréat — Économie (Kara, 2014)"
+  "Baccalauréat, Économie (Kara, 2014)"
 ];
 
 export default function Skills() {
@@ -56,7 +57,7 @@ export default function Skills() {
             <span className="material-symbols-outlined text-secondary">school</span>
             <div>
               <h4 className="font-body-lg text-body-lg text-on-surface mt-lg">{t("form_t")}</h4>
-              <p className="font-label-sm text-label-sm text-on-surface-variant">Münchner Kammerspiele · AWUI Media · Festival EMERGENCE</p>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">Münchner Kammerspiele, AWUI Media, Festival EMERGENCE</p>
             </div>
           </Reveal>
 
@@ -64,18 +65,23 @@ export default function Skills() {
             <span className="material-symbols-outlined text-secondary">groups</span>
             <div>
               <h4 className="font-body-lg text-body-lg text-on-surface mt-lg">{t("trans_t")}</h4>
-              <p className="font-label-sm text-label-sm text-on-surface-variant">Formateur — CANAL+, ONACIG, ATCNA, WELTFILME</p>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">Formateur, CANAL+, le cinéma parle, ATCNA, WELTFILME</p>
             </div>
           </Reveal>
 
-          <Reveal className="md:col-span-4 technical-border p-md bg-surface-container-low/60 flex flex-wrap gap-lg items-center hover:bg-surface-container-high transition-colors">
-            <span className="font-label-md text-label-md text-on-surface-variant uppercase">{t("edu_t")}</span>
-            {EDU.map((e) => (
-              <div key={e} className="flex items-center gap-xs hover:text-primary transition-colors cursor-default">
-                <span className="material-symbols-outlined text-sm text-on-surface-variant">arrow_right</span>
-                <span className="font-body-md text-body-md">{e}</span>
-              </div>
-            ))}
+          <Reveal className="md:col-span-4 technical-border p-md bg-surface-container-low/60 flex flex-col md:flex-row gap-md hover:bg-surface-container-high transition-colors overflow-hidden">
+            <div className="relative w-40 h-40 mx-auto md:mx-0 md:shrink-0 technical-border bg-surface-container/30 overflow-hidden shrink-0">
+              <ParcoursScene />
+            </div>
+            <div className="flex-1 flex flex-col gap-base text-left md:pl-lg">
+              <span className="font-headline-lg text-headline-lg text-primary uppercase">{t("edu_t")}</span>
+              {EDU.map((e) => (
+                <div key={e} className="flex items-center gap-xs hover:text-primary transition-colors cursor-default">
+                  <span className="material-symbols-outlined text-sm text-on-surface-variant">arrow_right</span>
+                  <span className="font-body-md text-body-md">{e}</span>
+                </div>
+              ))}
+            </div>
           </Reveal>
         </div>
       </div>

@@ -2,16 +2,16 @@ import { useI18n } from "../i18n/I18nContext";
 import Reveal from "./Reveal";
 
 const CINEMA = [
-  { title: "SIFA", role: "f1_r", meta: "2024 · Togo" },
-  { title: "Une fiancée à la barre", role: "f2_r", meta: "2023 · Togo" },
-  { title: "Le retour sur la terre des ancêtres", role: "f3_r", meta: "2023 · Bénin / Canada" },
-  { title: "Togoland Projections", role: "f4_r", meta: "2022 · Togo / France / Allemagne" },
-  { title: "Agome Seva, de l'ombre à la lumière", role: "f5_r", meta: "2022 · Togo / Belgique" }
+  { title: "SIFA", role: "f1_r", meta: "2024, Togo" },
+  { title: "Une fiancée à la barre", role: "f2_r", meta: "2023, Togo" },
+  { title: "Le retour sur la terre des ancêtres", role: "f3_r", meta: "2023, Bénin / Canada" },
+  { title: "Togoland Projections", role: "f4_r", meta: "2022, Togo / France / Allemagne" },
+  { title: "Agome Seva, de l'ombre à la lumière", role: "f5_r", meta: "2022, Togo / Belgique" }
 ];
 
 const THEATRE = [
-  { title: "Young Confession", role: "f6_r", meta: "2024 · Allemagne" },
-  { title: "Les statues rêvent aussi, vision d'un retour — Acte 2", role: "f7_r", meta: "2023 · Burkina Faso" }
+  { title: "Young Confession", role: "f6_r", meta: "2024, Allemagne" },
+  { title: "Les statues rêvent aussi, vision d'un retour", role: "f7_r", meta: "2023, Burkina Faso" }
 ];
 
 const ACCENT = {
@@ -23,14 +23,14 @@ function Entry({ item, accent }) {
   const { t } = useI18n();
   const A = ACCENT[accent];
   return (
-    <Reveal className="flex flex-col md:flex-row justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-primary/40 group">
-      <div>
+    <Reveal className="flex flex-col md:flex-row md:items-start md:gap-gutter justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-primary/40 group">
+      <div className="md:flex-1">
         <h4 className={`font-headline-md text-headline-md text-on-surface ${A.hover} transition-colors`}>
           {item.title}
         </h4>
-        <p className="font-body-md text-body-md text-on-surface-variant">{t(item.role)}</p>
+        <p className="font-body-md text-body-md text-on-surface-variant mt-1">{t(item.role)}</p>
       </div>
-      <span className={`font-label-md text-label-md ${A.text} mt-base md:mt-0 opacity-70 ${A.hover} group-hover:opacity-100 transition-opacity`}>
+      <span className={`font-label-md text-label-md text-right md:text-right ${A.text} mt-base md:mt-0 md:shrink-0 opacity-70 ${A.hover} group-hover:opacity-100 transition-opacity`}>
         {item.meta}
       </span>
     </Reveal>
@@ -44,13 +44,11 @@ export default function Experiences() {
       <div className="max-w-container-max mx-auto px-md">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
           <div className="md:col-span-4">
-            <div className="sticky top-24 z-30 relative -mx-3 px-3 pt-10 pb-8 bg-surface backdrop-blur-sm">
+            <div className="sticky top-24 z-30 relative -mx-3 px-3 pt-10 pb-8 bg-surface">
               <h2
                 className="font-headline-lg text-headline-lg text-on-surface"
                 dangerouslySetInnerHTML={{ __html: t("exp_title") }}
               />
-              <div className="pointer-events-none absolute inset-x-0 -top-40 h-40 bg-gradient-to-t from-surface to-transparent" />
-              <div className="pointer-events-none absolute inset-x-0 -bottom-16 h-16 bg-gradient-to-b from-surface to-transparent" />
             </div>
             <div className="mt-md space-y-md">
               <div className="technical-border p-md bg-surface-container-low/80 hover:bg-surface-container-high transition-all hover:border-tertiary/40 group">
@@ -61,7 +59,11 @@ export default function Experiences() {
               <div className="technical-border p-md bg-surface-container-low/80">
                 <span className="material-symbols-outlined text-secondary mb-base">language</span>
                 <p className="font-label-md text-label-md text-on-surface-variant uppercase mb-xs">{t("lang_t")}</p>
-                <p className="font-body-md text-body-md text-on-surface">{t("lang_v")}</p>
+                <ul className="font-body-md text-body-md text-on-surface space-y-1 list-disc list-inside pl-1">
+                  {t("lang_v").split(", ").map((lang) => (
+                    <li key={lang}>{lang}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>

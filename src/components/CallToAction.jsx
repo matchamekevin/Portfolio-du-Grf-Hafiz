@@ -13,13 +13,13 @@ export default function CallToAction() {
         <p className="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto mb-xl">{t("cta_desc")}</p>
         <div className="flex flex-col md:flex-row justify-center gap-md">
           <a
-            className="px-xl py-md bg-primary text-on-primary font-headline-md text-headline-md uppercase tracking-widest glow-amber hover:brightness-110 hover:-translate-y-px active:scale-95 transition-all rounded-lg"
+            className="px-lg py-sm bg-primary text-on-primary font-body-md text-body-md uppercase tracking-widest glow-amber hover:brightness-110 hover:-translate-y-px active:scale-95 transition-all rounded-lg"
             href="mailto:caledboukari@yahoo.com"
           >
             {t("cta_engage")}
           </a>
           <a
-            className="px-xl py-md technical-border bg-surface-container/40 hover:bg-surface-container font-headline-md text-headline-md uppercase tracking-widest transition-all rounded-lg active:scale-95"
+            className="px-lg py-sm technical-border bg-surface-container/40 hover:bg-surface-container font-body-md text-body-md uppercase tracking-widest transition-all rounded-lg active:scale-95"
             href="mailto:caledboukari@yahoo.com?subject=CV%20Caled%20Boukari"
           >
             {t("cta_cv")}
