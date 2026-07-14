@@ -36,6 +36,41 @@ const PROJECTS = [
     img: "https://img.youtube.com/vi/26vJxzBDgro/maxresdefault.jpg",
     subKey: "p5_s",
     delay: "delay-100"
+  },
+  {
+    title: "RIFIFI_BA_VAD_2",
+    href: "https://vimeo.com/share/fdf86ed6-3562-4d5c-80db-6a605a72d2e1?share=copy&fl=tl&fe=ec",
+    img: "/image/Showreel/rififi-ba-vad-2.jpg",
+    subKey: "p6_s",
+    delay: "delay-200"
+  },
+  {
+    title: "Les maternelles d'Afrique S7 E10",
+    href: "https://www.tv5mondeplus.com/fr/culture-et-art-de-vivre/mode-de-vie/les-maternelles-d-afrique-s-7-e10",
+    img: "/image/Showreel/maternelles-afrique-s7-e10.jpg",
+    subKey: "p7_s",
+    delay: "delay-300"
+  },
+  {
+    title: "Les maternelles d'Afrique S7 E6",
+    href: "https://www.tv5mondeplus.com/fr/culture-et-art-de-vivre/mode-de-vie/les-maternelles-d-afrique-s-7-e6",
+    img: "/image/Showreel/maternelles-afrique-s7-e6.jpg",
+    subKey: "p8_s",
+    delay: "delay-300"
+  },
+  {
+    title: "Les maternelles d'Afrique S7 E12",
+    href: "https://www.tv5mondeplus.com/fr/culture-et-art-de-vivre/mode-de-vie/les-maternelles-d-afrique-s-7-e12",
+    img: "/image/Showreel/maternelles-afrique-s7-e12.jpg",
+    subKey: "p9_s",
+    delay: "delay-500"
+  },
+  {
+    title: "IMG_0175",
+    href: "https://vimeo.com/share/39fd3e51-c5e2-4e1c-84e1-6b104019900a?share=copy&fl=ip&fe=ec",
+    img: "/image/Showreel/img-0175.jpg",
+    subKey: "p10_s",
+    delay: "delay-100"
   }
 ];
 

@@ -3,7 +3,9 @@ import Reveal from "./Reveal";
 
 const SHOTS = [
   { src: "/image/quelques-images-de-tournages/im1.jpeg", alt: "Tournage" },
-  { src: "/image/quelques-images-de-tournages/im2.jpeg", alt: "Prise de son", cap: "g_cap2" },
+  { src: "/image/quelques-images-de-tournages/im2.jpeg", alt: "Prise de son" },
+  { src: "/image/quelques-images-de-tournages/im4.jpeg", alt: "Tournage" },
+  { src: "/image/quelques-images-de-tournages/im3.jpeg", alt: "Tournage" },
 ];
 
 export default function Gallery() {
@@ -22,9 +24,9 @@ export default function Gallery() {
             {t("g_desc")}
           </p>
         </Reveal>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-md items-start">
+        <div className="columns-1 md:columns-2 gap-md [column-fill:balance] [&>*]:break-inside-avoid [&>*]:mb-md">
           {SHOTS.map((shot, i) => (
-            <Reveal key={shot.src} className={i === 1 ? "delay-100" : ""}>
+            <Reveal key={shot.src}>
               <figure className="group technical-border bg-surface-container/40 overflow-hidden">
                 <img
                   src={shot.src}
@@ -33,11 +35,6 @@ export default function Gallery() {
                   loading="lazy"
                 />
               </figure>
-              {shot.cap && (
-                <div className="mt-xl p-md technical-border bg-surface-container/40 font-body-lg text-body-lg text-on-surface-variant text-justify">
-                  {t(shot.cap)}
-                </div>
-              )}
             </Reveal>
           ))}
         </div>
