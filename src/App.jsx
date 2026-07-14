@@ -9,7 +9,6 @@ import CallToAction from "./components/CallToAction";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ShaderBackground from "./components/ShaderBackground";
-import HeadphoneBackground from "./components/HeadphoneBackground";
 
 export default function App() {
   // Reveal Material Symbols glyphs only once the icon font is ready,
@@ -34,7 +33,6 @@ export default function App() {
   return (
     <>
       <ShaderBackground />
-      <HeadphoneBackground />
       <Navbar />
       <main>
         <Hero />
