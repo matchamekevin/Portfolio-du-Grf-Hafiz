@@ -5,6 +5,7 @@ import { useTheme } from "../theme/ThemeContext";
 export default function ThreeScene() {
   const mountRef = useRef(null);
   const materialRef = useRef(null);
+  const bgRef = useRef(null);
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -19,6 +20,19 @@ export default function ThreeScene() {
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
+
+    // Opaque panel background so the full-screen headphone behind the page
+    // does not show through this hero canvas.
+    const applyBg = () => {
+      const c = getComputedStyle(document.documentElement)
+        .getPropertyValue("--surface-container")
+        .trim()
+        .split(/\s+/)
+        .map(Number);
+      renderer.setClearColor(new THREE.Color(c[0] / 255, c[1] / 255, c[2] / 255), 1);
+    };
+    applyBg();
+    bgRef.current = applyBg;
 
     const geometry = new THREE.IcosahedronGeometry(1.5, 15);
     const material = new THREE.MeshPhongMaterial({
@@ -80,7 +94,7 @@ export default function ThreeScene() {
     };
   }, []);
 
-  // Re-apply sphere color when theme changes.
+  // Re-apply sphere + panel colors when the theme flips (CSS vars change).
   useEffect(() => {
     const container = mountRef.current;
     if (!container || !materialRef.current) return;
@@ -88,6 +102,7 @@ export default function ThreeScene() {
       .getPropertyValue("--primary").trim().split(/\s+/).map(Number);
     materialRef.current.color.setRGB(p[0] / 255, p[1] / 255, p[2] / 255);
     materialRef.current.emissive.setRGB(p[0] / 255, p[1] / 255, p[2] / 255);
+    if (bgRef.current) bgRef.current();
   }, [theme]);
 
   return <div className="absolute inset-0" ref={mountRef} />;
