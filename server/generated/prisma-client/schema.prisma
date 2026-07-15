@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ShowreelProject {
+  id            Int      @id @default(autoincrement())
+  title         String   @db.VarChar(255)
+  href          String   @db.Text
+  imageUrl      String   @db.Text
+  imagePublicId String   @db.Text
+  subKey        String   @db.VarChar(255)
+  delay         String   @default("delay-100") @db.VarChar(50)
+  order         Int      @default(0)
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @db.Timestamptz
+  updatedAt     DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([order])
+}
+
+model Experience {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  role      String   @db.VarChar(255)
+  meta      String   @db.VarChar(255)
+  category  String   @db.VarChar(50)
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([category])
+  @@index([order])
+}
+
+model GalleryShot {
+  id        Int      @id @default(autoincrement())
+  src       String   @db.Text
+  publicId  String   @db.Text
+  alt       String   @db.VarChar(255)
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([order])
+}
+
+model SkillSection {
+  id        Int      @id @default(autoincrement())
+  section   String   @db.VarChar(255)
+  title     String   @db.VarChar(255)
+  items     Json
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([order])
+}
+
+model ContactInfo {
+  id           Int      @id @default(autoincrement())
+  email        String   @db.VarChar(255)
+  phone1       String?  @db.VarChar(50)
+  phone2       String?  @db.VarChar(50)
+  availability String?  @db.Text
+  location     String?  @db.Text
+  updatedAt    DateTime @default(now()) @updatedAt @db.Timestamptz
+}
+
+model Hero {
+  id        Int      @id @default(autoincrement())
+  status    String   @db.VarChar(100)
+  badge     String   @db.VarChar(100)
+  title     String   @db.Text
+  subtitle  String   @db.Text
+  tags      Json
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+}
+
+model Cta {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.Text
+  description String   @db.Text
+  engageHref  String   @db.VarChar(500)
+  cvHref      String   @db.VarChar(500)
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamptz
+}
+
+model Footer {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  copyright String   @db.Text
+  email     String?  @db.VarChar(255)
+  phone     String?  @db.VarChar(50)
+  vimeoUrl  String?  @db.VarChar(500)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+}
+
+model Translation {
+  id        Int      @id @default(autoincrement())
+  key       String   @db.VarChar(255)
+  language  String   @db.VarChar(10)
+  value     String   @db.Text
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@unique([key, language])
+  @@index([key, language])
+}
+
+model Language {
+  id       Int     @id @default(autoincrement())
+  code     String  @db.VarChar(10)
+  label    String  @db.VarChar(100)
+  flag     String  @db.VarChar(10)
+  langCode String? @db.VarChar(10)
+  order    Int     @default(0)
+}
+
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  email     String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  name      String?  @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@unique([email])
+}

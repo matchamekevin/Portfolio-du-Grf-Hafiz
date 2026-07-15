@@ -1,0 +1,27 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "mcp": {
+    "azure": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@azure/mcp@3.0.0-beta.21",
+        "server",
+        "start",
+        "--read-only"
+      ],
+      "environment": {
+        "AZURE_MCP_COLLECT_TELEMETRY": "false",
+        "AZURE_MCP_COLLECT_TELEMETRY_MICROSOFT": "false"
+      }
+    },
+    "airbyte-knowledge-mcp": {
+      "type": "remote",
+      "url": "https://airbyte.mcp.kapa.ai"
+    }
+  },
+  "commit_message": {
+    "prompt": ""
+  }
+}

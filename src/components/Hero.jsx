@@ -14,7 +14,6 @@ export default function Hero() {
       <div className="relative z-10 max-w-container-max mx-auto px-md w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
         <div className="md:col-span-8 animate-fade-in-up">
           <div className="flex items-center gap-base mb-md">
-            <span className="w-2 h-2 rounded-full bg-tertiary led-pulse"></span>
             <span className="font-label-md text-label-md text-tertiary uppercase tracking-widest">
               {t("hero_status")}
             </span>

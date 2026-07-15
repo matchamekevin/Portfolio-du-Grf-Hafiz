@@ -67,11 +67,9 @@ export default function Contact() {
             <div className="pt-md space-y-sm">
               <p className="font-label-sm text-on-surface-variant uppercase border-b border-outline-variant pb-2">{t("c_avail")}</p>
               <div className="flex items-center gap-base">
-                <span className="led-indicator led-active" />
                 <span className="font-body-md">{t("c_avail1")}</span>
               </div>
               <div className="flex items-center gap-base opacity-70">
-                <span className="led-indicator led-active" />
                 <span className="font-body-md">Lomé, Togo ,  International / Remote</span>
               </div>
             </div>

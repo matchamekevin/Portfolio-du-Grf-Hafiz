@@ -60,14 +60,14 @@ export default {
       },
       maxWidth: { "container-max": "1280px" },
       fontFamily: {
-        "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
-        "label-sm": ["JetBrains Mono", "monospace"],
-        "body-md": ["Geist", "sans-serif"],
-        "headline-md": ["Space Grotesk", "sans-serif"],
-        "headline-lg": ["Space Grotesk", "sans-serif"],
-        "label-md": ["JetBrains Mono", "monospace"],
-        "body-lg": ["Geist", "sans-serif"],
-        "display-lg": ["Space Grotesk", "sans-serif"]
+        "headline-lg-mobile": ["Inter", "system-ui", "sans-serif"],
+        "label-sm": ["Inter", "system-ui", "sans-serif"],
+        "body-md": ["Inter", "system-ui", "sans-serif"],
+        "headline-md": ["Inter", "system-ui", "sans-serif"],
+        "headline-lg": ["Inter", "system-ui", "sans-serif"],
+        "label-md": ["Inter", "system-ui", "sans-serif"],
+        "body-lg": ["Inter", "system-ui", "sans-serif"],
+        "display-lg": ["Inter", "system-ui", "sans-serif"]
       },
       fontSize: {
         "headline-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "600" }],

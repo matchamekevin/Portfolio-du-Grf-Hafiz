@@ -59,7 +59,7 @@ html.light {
 
   .module-header {
     background: rgb(var(--module-header-bg)); border-bottom: 1px solid rgb(var(--border-studio));
-    padding: 8px 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 8px 12px; font-family: 'Inter', system-ui, sans-serif; font-size: 10px;
     text-transform: uppercase; letter-spacing: 0.1em; color: rgb(var(--on-surface-variant));
   }
 
@@ -69,10 +69,10 @@ html.light {
 
   /* Theme + language controls */
   .ctrl-btn {
-    display: flex; align-items: center; gap: 4px;
+    display: inline-flex; align-items: center; gap: 4px;
     background-color: rgb(var(--surface-container)); color: rgb(var(--on-surface));
     border: 1px solid rgb(var(--border-studio));
-    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    font-family: 'Inter', system-ui, sans-serif; font-size: 12px;
     text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 10px;
     border-radius: 0.125rem; cursor: pointer;
     transition: border-color .2s ease, color .2s ease, background-color .2s ease;
@@ -82,14 +82,14 @@ html.light {
   .lang-menu {
     position: absolute; right: 0; top: calc(100% + 6px); min-width: 140px;
     background-color: rgb(var(--surface-container)); border: 1px solid rgb(var(--border-studio));
-    border-radius: 0.125rem; box-shadow: 0 12px 30px rgba(0,0,0,0.35); padding: 4px; z-index: 60; display: none;
+    border-radius: 0.125rem; box-shadow: 0 12px 30px rgba(0,0,0,0.08); padding: 4px; z-index: 60; display: none;
   }
-  html.light .lang-menu { box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+  html.light .lang-menu { box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
   .lang-menu.open { display: block; }
   .lang-item {
     display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left;
     padding: 8px 10px; border-radius: 0.125rem; color: rgb(var(--on-surface));
-    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    font-family: 'Inter', system-ui, sans-serif; font-size: 12px;
     text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;
     transition: background-color .15s ease, color .15s ease;
   }
