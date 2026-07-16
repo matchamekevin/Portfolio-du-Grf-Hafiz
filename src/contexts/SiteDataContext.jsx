@@ -99,7 +99,14 @@ export function SiteDataProvider({ children }) {
   }, [fetchAll]);
 
   useRealtime((payload) => {
-    if (payload?.type === "updated" || payload?.type === "translations-updated") {
+    if (payload?.type === "updated" && payload.data) {
+      if (mountedRef.current) {
+        setData(payload.data);
+        writeCache(payload.data);
+        preloadedData = payload.data;
+        preloadTimestamp = Date.now();
+      }
+    } else if (payload?.type === "translations-updated") {
       fetchAll();
     }
   });

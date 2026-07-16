@@ -259,6 +259,36 @@ export const autoTranslationController = {
   },
 };
 
-export function broadcastUpdate(type = "updated") {
-  realtimeController.broadcast({ type, timestamp: Date.now() });
+export async function broadcastUpdate(type = "updated") {
+  try {
+    const prisma = (await import("../config/prisma.js")).default;
+    const [hero, contact, cta, footer, showreel, experiences, gallery, skills, trajectoire] = await Promise.all([
+      prisma.hero.findFirst(),
+      prisma.contactInfo.findFirst(),
+      prisma.cta.findFirst(),
+      prisma.footer.findFirst(),
+      prisma.showreelProject.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+      prisma.experience.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+      prisma.galleryShot.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+      prisma.skillSection.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+      prisma.trajectoire.findFirst(),
+    ]);
+    realtimeController.broadcast({
+      type,
+      timestamp: Date.now(),
+      data: {
+        hero: hero || null,
+        contact: contact || null,
+        cta: cta || null,
+        footer: footer || null,
+        showreel,
+        experiences,
+        gallery,
+        skills,
+        trajectoire: trajectoire || null,
+      },
+    });
+  } catch {
+    realtimeController.broadcast({ type, timestamp: Date.now() });
+  }
 }
