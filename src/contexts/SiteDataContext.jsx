@@ -39,19 +39,26 @@ const EMPTY = {
   skills: [],
 };
 
+let preloadedData = null;
+
 export function preloadData() {
   const cached = readCache();
-  if (cached) return Promise.resolve(cached);
+  if (cached) {
+    preloadedData = cached;
+    return Promise.resolve(cached);
+  }
   return api.public.getAll().then((res) => {
     if (res && res.status === "ok") {
       writeCache(res.data);
+      preloadedData = res.data;
       return res.data;
     }
-  }).catch(() => null);
+    return EMPTY;
+  }).catch(() => EMPTY);
 }
 
 export function SiteDataProvider({ children }) {
-  const [data, setData] = useState(() => readCache() || EMPTY);
+  const [data, setData] = useState(() => preloadedData || readCache() || EMPTY);
   const mountedRef = useRef(true);
 
   const fetchAll = useCallback(() => {
@@ -61,6 +68,7 @@ export function SiteDataProvider({ children }) {
         if (res && res.status === "ok" && mountedRef.current) {
           setData(res.data);
           writeCache(res.data);
+          preloadedData = res.data;
         }
       })
       .catch(() => {});

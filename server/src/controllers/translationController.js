@@ -37,6 +37,7 @@ export const translationController = {
       data: parsed.data,
     });
     res.status(201).json({ status: "ok", data });
+    broadcastUpdate("translations-updated");
   },
 
   update: async (req, res, next) => {
@@ -82,6 +83,7 @@ export const translationController = {
       where: { id },
     });
     res.json({ status: "ok", data });
+    broadcastUpdate("translations-updated");
   },
 
   syncDbContent: async (req, res, next) => {

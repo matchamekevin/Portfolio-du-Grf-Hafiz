@@ -10,7 +10,7 @@ import { preloadData } from "./contexts/SiteDataContext";
 import "@fontsource/material-symbols-outlined/latin-400.css";
 import "./index.css";
 
-preloadData().then(() => {
+preloadData().catch(() => {}).finally(() => {
   createRoot(document.getElementById("root")).render(
     <StrictMode>
       <BrowserRouter>
