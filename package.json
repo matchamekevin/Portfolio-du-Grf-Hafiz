@@ -14,6 +14,7 @@
     "@fontsource/material-symbols-outlined": "^5.2.45",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.1",
     "three": "^0.160.1"
   },
   "devDependencies": {
