@@ -79,10 +79,7 @@ export default function Contact() {
             <div className="pt-md space-y-sm">
               <p className="font-label-sm text-on-surface-variant uppercase border-b border-outline-variant pb-2">{t("c_avail")}</p>
               <div className="flex items-center gap-base">
-                <span className="font-body-md">{availability}</span>
-              </div>
-              <div className="flex items-center gap-base opacity-70">
-                <span className="font-body-md">{location}</span>
+                <span className="font-body-md">{availability} / {location}</span>
               </div>
             </div>
           </div>

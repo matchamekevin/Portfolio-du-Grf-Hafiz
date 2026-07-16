@@ -923,6 +923,7 @@ function AdminProfile() {
 function AdminPage() {
   const { user, logout } = useAuth();
   const { mode, setMode } = useAdminTheme();
+  const { t } = useI18n();
   const toast = useToast();
   const [tab, setTabState] = useState(() => {
     try { return localStorage.getItem("admin_tab") || "hero"; } catch { return "hero"; }
@@ -933,6 +934,7 @@ function AdminPage() {
   };
   const [contact, setContact] = useState(null);
   const [footer, setFooter] = useState(null);
+  const [availLoc, setAvailLoc] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
   const [syncing, setSyncing] = useState(false);
   const [syncProgress, setSyncProgress] = useState(null);
@@ -944,6 +946,9 @@ function AdminPage() {
 
   useEffect(() => { setContact(contactData); }, [contactData]);
   useEffect(() => { setFooter(footerData); }, [footerData]);
+  useEffect(() => {
+    if (contactData) setAvailLoc(`${contactData.availability || ""} / ${contactData.location || ""}`);
+  }, [contactData]);
 
   const refreshAll = () => setRefreshKey((k) => k + 1);
 
@@ -1065,8 +1070,30 @@ function AdminPage() {
                 <Field label="Email de reception du formulaire" hint="Les messages du formulaire seront envoyes a cette adresse"><input className="admin-input" value={contact.formEmail || contact.email || ""} onChange={(e) => setContact({ ...contact, formEmail: e.target.value })} /></Field>
                 <Field label="Telephone 1"><input className="admin-input" value={contact.phone1 || ""} onChange={(e) => setContact({ ...contact, phone1: e.target.value })} /></Field>
                 <Field label="Telephone 2"><input className="admin-input" value={contact.phone2 || ""} onChange={(e) => setContact({ ...contact, phone2: e.target.value })} /></Field>
-                <Field label="Disponibilite"><input className="admin-input" value={contact.availability || ""} onChange={(e) => setContact({ ...contact, availability: e.target.value })} /></Field>
-                <Field label="Localisation"><input className="admin-input" value={contact.location || ""} onChange={(e) => setContact({ ...contact, location: e.target.value })} /></Field>
+              </div>
+              <div className="space-y-4 pt-2 border-t border-admin-border/60">
+                <h3 className="text-xs font-semibold text-admin-muted uppercase tracking-wide">{t("c_avail_loc")}</h3>
+                <div className="space-y-1">
+                  <label className="admin-label">{t("c_avail")} / {t("c_label_loc")}</label>
+                  <input
+                    className="admin-input w-full"
+                    value={availLoc}
+                    onChange={(e) => setAvailLoc(e.target.value)}
+                    onBlur={(e) => {
+                      const sep = " / ";
+                      const idx = e.target.value.indexOf(sep);
+                      if (idx === -1) {
+                        setContact({ ...contact, availability: e.target.value, location: "" });
+                        setAvailLoc(e.target.value);
+                      } else {
+                        const avail = e.target.value.slice(0, idx);
+                        const loc = e.target.value.slice(idx + sep.length);
+                        setContact({ ...contact, availability: avail, location: loc });
+                        setAvailLoc(`${avail} / ${loc}`);
+                      }
+                    }}
+                  />
+                </div>
               </div>
             </section>
           )}

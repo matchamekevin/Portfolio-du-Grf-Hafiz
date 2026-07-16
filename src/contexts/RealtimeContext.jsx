@@ -24,6 +24,8 @@ export function RealtimeProvider({ role, children }) {
 
       ws.onopen = () => { retriesRef.current = 0; };
 
+      ws.onerror = () => {};
+
       ws.onclose = () => {
         const delay = Math.min(1000 * 2 ** retriesRef.current, 30000);
         retriesRef.current++;

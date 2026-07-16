@@ -12,7 +12,8 @@ export default function Hero() {
   const title = t("db.hero.title") || hero?.title || t("hero_title");
   const subtitle = t("db.hero.subtitle") || hero?.subtitle || t("hero_sub");
   const badge = t("db.hero.badge") || hero?.badge || t("hero_badge");
-  const location = t("db.contact.location") || contact?.location || "Lome, Togo";
+  const availability = contact?.availability || t("hero_status");
+  const location = contact?.location || "Lome, Togo";
 
   const tags = Array.isArray(hero?.tags) && hero.tags.length > 0
     ? hero.tags
@@ -23,10 +24,8 @@ export default function Hero() {
       <div className="relative z-10 max-w-container-max mx-auto px-md w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
         <div className="md:col-span-8 animate-fade-in-up">
           <div className="flex items-center gap-base mb-md">
-            <span className="font-label-md text-label-md text-tertiary uppercase tracking-widest">
-              {status}
-            </span>
-            <span className="font-label-md text-label-md text-on-surface-variant">{location}</span>
+            <span className="font-label-md text-label-md text-tertiary uppercase tracking-widest">{t("c_avail")} :</span>
+            <span className="font-label-md text-label-md text-on-surface-variant">{availability} · {location}</span>
           </div>
           <h1
             className="font-display-lg text-3xl sm:text-5xl md:text-display-lg text-on-surface mb-md break-words"
