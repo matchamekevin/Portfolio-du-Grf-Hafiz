@@ -26,13 +26,15 @@ export function ToastProvider({ children }) {
   const toast = {
     success: (msg, opts) => add(msg, { ...opts, type: "success" }),
     error: (msg, opts) => add(msg, { ...opts, type: "error" }),
+    warning: (msg, opts) => add(msg, { ...opts, type: "warning" }),
     info: (msg, opts) => add(msg, { ...opts, type: "info" }),
   };
 
-  const icons = { success: "check_circle", error: "error", info: "info" };
+  const icons = { success: "check_circle", error: "error", warning: "warning", info: "info" };
   const accents = {
     success: "border-l-emerald-400",
     error: "border-l-red-400",
+    warning: "border-l-amber-400",
     info: "border-l-amber-400",
   };
 

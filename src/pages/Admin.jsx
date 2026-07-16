@@ -935,6 +935,7 @@ function AdminPage() {
   const [footer, setFooter] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [syncing, setSyncing] = useState(false);
+  const [syncProgress, setSyncProgress] = useState(null);
   const [savingContact, setSavingContact] = useState(false);
   const [savingFooter, setSavingFooter] = useState(false);
 
@@ -946,19 +947,45 @@ function AdminPage() {
 
   const refreshAll = () => setRefreshKey((k) => k + 1);
 
+  const finishSync = () => {
+    setSyncing(false);
+    setSyncProgress((p) => {
+      if (p && p.failed > 0) {
+        toast.warning(`${p.translated} traduites, ${p.failed} echec(s). Relancez pour completer.`);
+      } else {
+        toast.success(`${p ? p.translated : 0} traductions automatiques terminees`);
+      }
+      return null;
+    });
+  };
+
   useRealtime((payload) => {
     if (payload?.type === "updated" || payload?.type === "translations-updated") refreshAll();
+    if (payload?.type === "translation-progress") {
+      setSyncProgress({
+        translated: payload.translated || 0,
+        total: payload.total || 0,
+        failed: payload.failed || 0,
+        complete: !!payload.complete,
+      });
+      if (payload.complete) finishSync();
+    } else if (payload?.type === "translation-error") {
+      setSyncing(false);
+      setSyncProgress(null);
+      toast.error("Erreur de traduction : " + (payload.message || "inconnue"));
+    }
   });
 
   const handleAutoTranslate = async () => {
     setSyncing(true);
+    setSyncProgress({ translated: 0, total: 0, failed: 0, complete: false });
     try {
       await api.translations.autoSync({ sourceLanguage: "fr", targetLanguages: ["en", "de", "es", "pt"] });
-      toast.success("Traductions automatiques mises a jour");
+      toast.success("Traduction automatique lancee");
     } catch (e) {
-      toast.error(e.message);
-    } finally {
       setSyncing(false);
+      setSyncProgress(null);
+      toast.error(e.message);
     }
   };
 
@@ -999,6 +1026,32 @@ function AdminPage() {
       {tab === "profile" && <AdminProfile />}
       {tab === "page" && (
         <div className="space-y-6">
+          <section className="admin-card p-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="font-headline-md text-headline-md text-admin-text">Traductions automatiques</h2>
+              <button type="button" onClick={handleAutoTranslate} className="admin-btn admin-btn-primary text-xs" disabled={syncing}>
+                <span className="material-symbols-outlined text-base mr-1">{syncing ? "hourglass_empty" : "translate"}</span>{syncing ? "Traduction..." : "Traduire automatiquement"}
+              </button>
+            </div>
+            <p className="text-sm text-admin-muted">
+              Traduit le contenu francais vers l'anglais, l'allemand, l'espagnol et le portugais. La synchronisation s'effectue en arriere-plan.
+            </p>
+            {syncProgress && (
+              <div className="space-y-2">
+                <div className="h-2 w-full rounded-full bg-admin-border/40 overflow-hidden">
+                  <div
+                    className="h-full bg-admin-accent transition-all duration-300"
+                    style={{ width: syncProgress.total ? `${Math.round((syncProgress.translated / syncProgress.total) * 100)}%` : "0%" }}
+                  />
+                </div>
+                <p className="text-xs text-admin-muted">
+                  {syncProgress.translated} / {syncProgress.total} traduites
+                  {syncProgress.failed > 0 ? ` — ${syncProgress.failed} echec(s)` : ""}
+                  {syncProgress.complete ? " — termine" : " — en cours..."}
+                </p>
+              </div>
+            )}
+          </section>
           {contact && (
             <section className="admin-card p-6 space-y-4">
               <div className="flex justify-between items-center">

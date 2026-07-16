@@ -60,50 +60,199 @@ export const realtimeController = {
   },
 };
 
+async function withTimeout(promise, ms) {
+  let timer;
+  const timeout = new Promise((_, reject) =>
+    (timer = setTimeout(() => reject(new Error("timeout")), ms))
+  );
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+const MEMORY_KEY = process.env.MYMEMORY_EMAIL || "";
+
+function stripHtml(text) {
+  return text
+    .replace(/<[^>]+>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+async function translateMyMemory(text, from, to) {
+  const clean = stripHtml(text);
+  if (!clean) return text;
+  const params = new URLSearchParams({ q: clean, langpair: `${from}|${to}` });
+  if (MEMORY_KEY) params.set("de", MEMORY_KEY);
+  const url = `https://api.mymemory.translated.net/get?${params.toString()}`;
+  const res = await withTimeout(fetch(url), 10000);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  if (data.responseStatus !== 200 && data.responseStatus !== "200") {
+    throw new Error(data.responseDetails || "translation failed");
+  }
+  return data.responseData.translatedText;
+}
+
+async function translateWithRetry(text, from, to, retries = 3) {
+  let lastErr;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const translated = await translateMyMemory(text, from, to);
+      if (translated && !/MYMEMORY WARNING/.test(translated)) return translated;
+      throw new Error("empty/blocked translation");
+    } catch (err) {
+      lastErr = err;
+      const delay = Math.min(400 * Math.pow(2, attempt), 4000);
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+  return null;
+}
+
+async function runPool(tasks, concurrency) {
+  const results = [];
+  let index = 0;
+  async function worker() {
+    while (index < tasks.length) {
+      const current = index++;
+      results[current] = await tasks[current]();
+    }
+  }
+  const workers = Array.from({ length: Math.min(concurrency, tasks.length) }, worker);
+  await Promise.all(workers);
+  return results;
+}
+
 export const autoTranslationController = {
   syncMissing: async (req, res, next) => {
     try {
-      const { sourceLanguage = "fr", targetLanguages = ["en", "de", "es", "pt"] } = req.body;
-      const prisma = (await import("../config/prisma.js")).default;
-      const { translate } = await import("@vitalets/google-translate-api");
+      const {
+        sourceLanguage = "fr",
+        targetLanguages = ["en", "de", "es", "pt"],
+        concurrency = 4,
+        batchSize = 15,
+      } = req.body;
 
-      const sourceTranslations = await prisma.translation.findMany({
-        where: { language: sourceLanguage },
-      });
-      const results = [];
-      for (const target of targetLanguages) {
-        const existing = await prisma.translation.findMany({
-          where: { language: target },
+      const runSync = async () => {
+        const prisma = (await import("../config/prisma.js")).default;
+        const sourceTranslations = await prisma.translation.findMany({
+          where: { language: sourceLanguage },
         });
-        const existingMap = new Map(existing.map((t) => [t.key, t]));
-        for (const source of sourceTranslations) {
-          const current = existingMap.get(source.key);
-          if (!current || current.value === source.value) {
-            let translatedValue = source.value;
-            if (target !== sourceLanguage) {
-              try {
-                const result = await translate(source.value, { from: sourceLanguage, to: target });
-                translatedValue = result.text;
-              } catch {
-                translatedValue = source.value;
-              }
-            }
-            if (current) {
-              await prisma.translation.update({
-                where: { id: current.id },
-                data: { value: translatedValue },
-              });
-            } else {
-              await prisma.translation.create({
-                data: { key: source.key, language: target, value: translatedValue },
-              });
-            }
-            results.push({ key: source.key, language: target, value: translatedValue });
+        const sourceMap = new Map(sourceTranslations.map((t) => [t.key, t]));
+        const allKeys = [...sourceMap.keys()];
+
+        const results = [];
+        let failed = [];
+        let total = 0;
+        let done = 0;
+        for (const target of targetLanguages) {
+          if (target === sourceLanguage) continue;
+          const existing = await prisma.translation.findMany({ where: { language: target } });
+          const existingMap = new Map(existing.map((t) => [t.key, t]));
+          for (const key of allKeys) {
+            const source = sourceMap.get(key);
+            const current = existingMap.get(key);
+            if (!current || !current.value || current.value === source.value) total++;
           }
         }
-      }
-      realtimeController.broadcast({ type: "translations-updated" });
-      res.json({ status: "ok", data: results });
+
+        const broadcastProgress = () => {
+          realtimeController.broadcast({
+            type: "translation-progress",
+            translated: done,
+            total,
+            failed: failed.length,
+          });
+        };
+
+        const translateKey = async ({ key, source, current }, target) => {
+          const translatedValue = await translateWithRetry(source.value, sourceLanguage, target);
+          if (!translatedValue || translatedValue === source.value) {
+            return false;
+          }
+          if (current) {
+            await prisma.translation.update({
+              where: { id: current.id },
+              data: { value: translatedValue, updatedAt: new Date() },
+            });
+          } else {
+            await prisma.translation.create({
+              data: { key, language: target, value: translatedValue },
+            });
+          }
+          results.push({ key, language: target, value: translatedValue, status: "translated" });
+          return true;
+        };
+
+        for (const target of targetLanguages) {
+          if (target === sourceLanguage) continue;
+          const existing = await prisma.translation.findMany({ where: { language: target } });
+          const existingMap = new Map(existing.map((t) => [t.key, t]));
+
+          const toTranslate = [];
+          for (const key of allKeys) {
+            const source = sourceMap.get(key);
+            const current = existingMap.get(key);
+            if (current && current.value && current.value !== source.value) {
+              results.push({ key, language: target, value: current.value, status: "kept" });
+              continue;
+            }
+            toTranslate.push({ key, source, current });
+          }
+
+          const batchFailed = [];
+          for (let i = 0; i < toTranslate.length; i += batchSize) {
+            const batch = toTranslate.slice(i, i + batchSize);
+            const tasks = batch.map((item) => async () => {
+              const ok = await translateKey(item, target);
+              done++;
+              if (!ok) batchFailed.push({ key: item.key, language: target });
+              broadcastProgress();
+            });
+            await runPool(tasks, concurrency);
+            if (i + batchSize < toTranslate.length) {
+              await new Promise((r) => setTimeout(r, 800));
+            }
+          }
+
+          for (let pass = 0; pass < 2 && batchFailed.length; pass++) {
+            await new Promise((r) => setTimeout(r, 1500));
+            const remaining = [];
+            const tasks = batchFailed.map(({ key }) => async () => {
+              const item = toTranslate.find((t) => t.key === key);
+              const ok = await translateKey(item, target);
+              done++;
+              if (!ok) remaining.push({ key, language: target });
+              broadcastProgress();
+            });
+            await runPool(tasks, Math.max(1, Math.floor(concurrency / 2)));
+            batchFailed.length = 0;
+            batchFailed.push(...remaining);
+          }
+          failed = failed.concat(batchFailed);
+        }
+
+        realtimeController.broadcast({ type: "translations-updated" });
+        realtimeController.broadcast({
+          type: "translation-progress",
+          translated: done,
+          total,
+          failed: failed.length,
+          complete: true,
+        });
+      };
+
+      runSync().catch((err) => {
+        console.error("[auto-sync] error:", err.message);
+        realtimeController.broadcast({ type: "translation-error", message: err.message });
+      });
+
+      res.json({ status: "started", data: { message: "Synchronisation en cours" } });
     } catch (e) {
       next(e);
     }
