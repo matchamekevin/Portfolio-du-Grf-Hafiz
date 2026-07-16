@@ -21,8 +21,8 @@ export function I18nProvider({ children }) {
   dbRef.current = dbTranslations;
 
   const fetchDbTranslations = useCallback((code) => {
-    const baseUrl = import.meta.env.VITE_API_URL || "";
-    fetch(`${baseUrl}/api/translations/${code}`)
+    const baseUrl = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "";
+    fetch(`${baseUrl}/translations/${code}`)
       .then((r) => r.json())
       .then((res) => {
         if (res?.status === "ok" && Array.isArray(res.data)) {
