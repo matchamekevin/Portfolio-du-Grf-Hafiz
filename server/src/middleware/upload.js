@@ -9,10 +9,10 @@ export const upload = multer({
     fileSize: config.upload.maxFileSize,
   },
   fileFilter: (req, file, cb) => {
-    if (config.upload.allowedMimeTypes.includes(file.mimetype)) {
+    if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
-      cb(new Error(`Type de fichier non autorise: ${file.mimetype}`), false);
+      cb(new Error("Seuls les fichiers image sont autorises"), false);
     }
   },
 });

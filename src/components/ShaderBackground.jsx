@@ -78,7 +78,9 @@ export default function ShaderBackground() {
     window.addEventListener("mousemove", onMove);
 
     let raf;
+    let paused = false;
     const render = (t) => {
+      if (paused) return;
       if (typeof ResizeObserver === "undefined") syncSize();
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform1f(uTime, t * 0.001);
@@ -89,8 +91,20 @@ export default function ShaderBackground() {
     };
     render(0);
 
+    const onVisChange = () => {
+      if (document.hidden) {
+        paused = true;
+        cancelAnimationFrame(raf);
+      } else {
+        paused = false;
+        raf = requestAnimationFrame(render);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisChange);
+
     return () => {
       cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", onVisChange);
       window.removeEventListener("mousemove", onMove);
     };
   }, []);

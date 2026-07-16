@@ -17,13 +17,17 @@ export default {
     expiresIn: process.env.AUTH_EXPIRES_IN || "7d",
   },
   upload: {
-    maxFileSize: parseInt(process.env.UPLOAD_MAX_FILE_SIZE || "10485760"),
+    maxFileSize: parseInt(process.env.UPLOAD_MAX_FILE_SIZE || "52428800"),
     allowedMimeTypes: [
       "image/jpeg",
       "image/png",
       "image/webp",
       "image/gif",
       "image/avif",
+      "image/svg+xml",
+      "image/tiff",
+      "image/bmp",
+      "image/x-icon",
     ],
   },
 };

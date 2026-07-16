@@ -88,8 +88,11 @@ model Hero {
 model Cta {
   id         String   @id @default(uuid())
   title      String   @db.Text
+  titleAccent String  @default("") @db.VarChar(255)
   description String  @db.Text
+  engageLabel String  @default("Engagez-moi") @db.VarChar(255)
   engageHref String   @db.VarChar(500)
+  cvLabel    String  @default("Telecharger le CV") @db.VarChar(255)
   cvHref     String   @db.VarChar(500)
   updatedAt  DateTime @default(now()) @updatedAt @db.Timestamptz
 }
@@ -104,16 +107,27 @@ model Footer {
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
 }
 
+model Trajectoire {
+  id             String   @id @default(uuid())
+  danteTitle     String   @db.VarChar(255)
+  danteSubtitle  String   @db.VarChar(255)
+  danteItems     Json
+  languages      Json
+  updatedAt      DateTime @default(now()) @updatedAt @db.Timestamptz
+}
+
 model Translation {
   id        String   @id @default(uuid())
   key       String   @db.VarChar(255)
   language  String   @db.VarChar(10)
   value     String   @db.Text
+  source    String   @default("ui") @db.VarChar(10)
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
 
   @@unique([key, language])
   @@index([key, language])
+  @@index([source])
 }
 
 model Language {

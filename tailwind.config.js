@@ -2,6 +2,10 @@
 export default {
   darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  safelist: [
+    "admin-light", "admin-dark", "admin-surface", "admin-card", "admin-btn", "admin-btn-primary", "admin-btn-secondary", "admin-btn-danger", "admin-input", "admin-label", "modal-overlay", "modal-sheet",
+    "bg-admin-surface", "bg-admin-surface/50", "bg-admin-surface/80", "text-admin-text", "text-admin-muted", "text-admin-accent", "text-admin-bg", "border-admin-border", "border-admin-border/60"
+  ],
   theme: {
     extend: {
       colors: {
@@ -51,7 +55,16 @@ export default {
         "surface-dim": "rgb(var(--surface-dim) / <alpha-value>)",
         "on-error-container": "#ffdad6",
         "on-primary-fixed": "#2b1700",
-        "on-background": "rgb(var(--on-surface) / <alpha-value>)"
+        "on-background": "rgb(var(--on-surface) / <alpha-value>)",
+        "admin-bg": "rgb(var(--admin-bg) / <alpha-value>)",
+        "admin-surface": "rgb(var(--admin-surface) / <alpha-value>)",
+        "admin-surface-raised": "rgb(var(--admin-surface-raised) / <alpha-value>)",
+        "admin-text": "rgb(var(--admin-text) / <alpha-value>)",
+        "admin-muted": "rgb(var(--admin-muted) / <alpha-value>)",
+        "admin-accent": "rgb(var(--admin-accent) / <alpha-value>)",
+        "admin-border": "rgb(var(--admin-border) / <alpha-value>)",
+        "admin-input-bg": "rgb(var(--admin-input-bg) / <alpha-value>)",
+        "admin-danger": "rgb(var(--admin-danger) / <alpha-value>)"
       },
       borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" },
       spacing: {
@@ -60,14 +73,16 @@ export default {
       },
       maxWidth: { "container-max": "1280px" },
       fontFamily: {
-        "headline-lg-mobile": ["Inter", "system-ui", "sans-serif"],
-        "label-sm": ["Inter", "system-ui", "sans-serif"],
-        "body-md": ["Inter", "system-ui", "sans-serif"],
-        "headline-md": ["Inter", "system-ui", "sans-serif"],
-        "headline-lg": ["Inter", "system-ui", "sans-serif"],
-        "label-md": ["Inter", "system-ui", "sans-serif"],
-        "body-lg": ["Inter", "system-ui", "sans-serif"],
-        "display-lg": ["Inter", "system-ui", "sans-serif"]
+        "headline-lg-mobile": ["Inter", "sans-serif"],
+        "label-sm": ["Inter", "sans-serif"],
+        "body-md": ["Inter", "sans-serif"],
+        "headline-md": ["Inter", "sans-serif"],
+        "headline-lg": ["Inter", "sans-serif"],
+        "label-md": ["Inter", "sans-serif"],
+        "body-lg": ["Inter", "sans-serif"],
+        "display-lg": ["Inter", "sans-serif"],
+        "headline-sm": ["Inter", "sans-serif"],
+        "label-lg": ["Inter", "sans-serif"]
       },
       fontSize: {
         "headline-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "600" }],

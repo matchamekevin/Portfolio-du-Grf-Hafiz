@@ -1,5 +1,7 @@
 import prisma from "../config/prisma.js";
 import { createTranslationSchema, updateTranslationSchema } from "../middleware/validate.js";
+import { broadcastUpdate } from "./realtimeController.js";
+import { syncDbTranslations } from "../utils/dbTranslationSync.js";
 
 export const translationController = {
   getAll: async (req, res, next) => {
@@ -48,6 +50,7 @@ export const translationController = {
       data: parsed.data,
     });
     res.json({ status: "ok", data });
+    broadcastUpdate("translations-updated");
   },
 
   upsert: async (req, res, next) => {
@@ -70,6 +73,7 @@ export const translationController = {
       });
     }
     res.json({ status: "ok", data });
+    broadcastUpdate("translations-updated");
   },
 
   delete: async (req, res, next) => {
@@ -78,6 +82,12 @@ export const translationController = {
       where: { id },
     });
     res.json({ status: "ok", data });
+  },
+
+  syncDbContent: async (req, res, next) => {
+    const result = await syncDbTranslations();
+    broadcastUpdate("translations-updated");
+    res.json({ status: "ok", data: result });
   },
 
   bulkUpsert: async (req, res, next) => {
@@ -105,5 +115,6 @@ export const translationController = {
       }
     }
     res.json({ status: "ok", data: results });
+    broadcastUpdate("translations-updated");
   },
 };

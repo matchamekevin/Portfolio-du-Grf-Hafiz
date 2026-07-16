@@ -101,9 +101,12 @@ async function seed() {
 
   await prisma.cta.create({
     data: {
-      title: "Pret pour le <span class=\"text-primary\">prochain projet ?</span>",
+      title: "Pret pour le",
+      titleAccent: "prochain projet ?",
       description: "Base a Lome, disponible pour les tournages, la post-production et le live en Afrique et a l'international. Construisons la paysage sonore de votre prochain chef-d'uvre.",
+      engageLabel: "Engagez-moi",
       engageHref: "mailto:caledboukari@yahoo.com",
+      cvLabel: "Telecharger le CV",
       cvHref: "mailto:caledboukari@yahoo.com?subject=CV%20Caled%20Boukari",
     },
   });

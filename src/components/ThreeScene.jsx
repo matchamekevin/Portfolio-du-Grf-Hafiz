@@ -44,7 +44,9 @@ export default function ThreeScene() {
 
     const original = geometry.attributes.position.array.slice();
     let raf;
+    let paused = false;
     const animate = () => {
+      if (paused) return;
       const time = Date.now() * 0.001;
       raf = requestAnimationFrame(animate);
       const pos = geometry.attributes.position.array;
@@ -62,6 +64,17 @@ export default function ThreeScene() {
     };
     animate();
 
+    const onVisChange = () => {
+      if (document.hidden) {
+        paused = true;
+        cancelAnimationFrame(raf);
+      } else {
+        paused = false;
+        animate();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisChange);
+
     const onResize = () => {
       const w = container.clientWidth, h = container.clientHeight;
       camera.aspect = w / h;
@@ -72,6 +85,7 @@ export default function ThreeScene() {
 
     return () => {
       cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", onVisChange);
       window.removeEventListener("resize", onResize);
       renderer.dispose();
       if (renderer.domElement.parentNode) {

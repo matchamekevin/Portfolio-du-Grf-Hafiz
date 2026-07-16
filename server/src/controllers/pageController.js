@@ -10,6 +10,12 @@ import {
   updateFooterSchema,
 } from "../middleware/validate.js";
 import { broadcastUpdate } from "./realtimeController.js";
+import { publicController } from "./publicController.js";
+import { syncDbTranslations } from "../utils/dbTranslationSync.js";
+
+function bgSync() {
+  syncDbTranslations().catch(() => {});
+}
 
 export const contactController = {
   getAll: async (req, res, next) => {
@@ -33,6 +39,8 @@ export const contactController = {
       data: parsed.data,
     });
     broadcastUpdate();
+    publicController.invalidateCache();
+    bgSync();
     res.status(201).json({ status: "ok", data });
   },
 
@@ -47,6 +55,8 @@ export const contactController = {
       data: parsed.data,
     });
     broadcastUpdate();
+    publicController.invalidateCache();
+    bgSync();
     res.json({ status: "ok", data });
   },
 
@@ -63,6 +73,8 @@ export const contactController = {
         data: parsed.data,
       });
       broadcastUpdate();
+      publicController.invalidateCache();
+      bgSync();
     } else {
       const parsed = createContactSchema.safeParse(req.body);
       if (!parsed.success) {
@@ -72,6 +84,8 @@ export const contactController = {
         data: parsed.data,
       });
       broadcastUpdate();
+      publicController.invalidateCache();
+      bgSync();
     }
     res.json({ status: "ok", data });
   },
@@ -92,6 +106,8 @@ export const heroController = {
       data: parsed.data,
     });
     broadcastUpdate();
+    publicController.invalidateCache();
+    bgSync();
     res.status(201).json({ status: "ok", data });
   },
 
@@ -106,6 +122,8 @@ export const heroController = {
       data: parsed.data,
     });
     broadcastUpdate();
+    publicController.invalidateCache();
+    bgSync();
     res.json({ status: "ok", data });
   },
 
@@ -122,6 +140,8 @@ export const heroController = {
         data: parsed.data,
       });
       broadcastUpdate();
+      publicController.invalidateCache();
+      bgSync();
     } else {
       const parsed = createHeroSchema.safeParse(req.body);
       if (!parsed.success) {
@@ -131,6 +151,8 @@ export const heroController = {
         data: parsed.data,
       });
       broadcastUpdate();
+      publicController.invalidateCache();
+      bgSync();
     }
     res.json({ status: "ok", data });
   },
@@ -155,6 +177,8 @@ export const ctaController = {
         data: parsed.data,
       });
       broadcastUpdate();
+      publicController.invalidateCache();
+      bgSync();
     } else {
       const parsed = createCtaSchema.safeParse(req.body);
       if (!parsed.success) {
@@ -164,6 +188,8 @@ export const ctaController = {
         data: parsed.data,
       });
       broadcastUpdate();
+      publicController.invalidateCache();
+      bgSync();
     }
     res.json({ status: "ok", data });
   },
@@ -188,6 +214,8 @@ export const footerController = {
         data: parsed.data,
       });
       broadcastUpdate();
+      publicController.invalidateCache();
+      bgSync();
     } else {
       const parsed = createFooterSchema.safeParse(req.body);
       if (!parsed.success) {
@@ -197,6 +225,8 @@ export const footerController = {
         data: parsed.data,
       });
       broadcastUpdate();
+      publicController.invalidateCache();
+      bgSync();
     }
     res.json({ status: "ok", data });
   },

@@ -1,6 +1,7 @@
 import prisma from "../config/prisma.js";
 import { createExperienceSchema, updateExperienceSchema } from "../middleware/validate.js";
 import { broadcastUpdate } from "./realtimeController.js";
+import { publicController } from "./publicController.js";
 
 export const experienceController = {
   getAll: async (req, res, next) => {
@@ -47,6 +48,7 @@ export const experienceController = {
       data: parsed.data,
     });
     broadcastUpdate();
+    publicController.invalidateCache();
     res.status(201).json({ status: "ok", data });
   },
 
@@ -61,6 +63,7 @@ export const experienceController = {
       data: parsed.data,
     });
     broadcastUpdate();
+    publicController.invalidateCache();
     res.json({ status: "ok", data });
   },
 
@@ -70,6 +73,7 @@ export const experienceController = {
       where: { id },
     });
     broadcastUpdate();
+    publicController.invalidateCache();
     res.json({ status: "ok", data });
   },
 };

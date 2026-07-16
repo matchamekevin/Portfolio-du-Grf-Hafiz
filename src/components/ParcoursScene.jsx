@@ -63,8 +63,10 @@ export default function ParcoursScene() {
     matsRef.current = { tubeMat, nodeMat };
 
     let raf;
+    let paused = false;
     const clock = new THREE.Clock();
     const animate = () => {
+      if (paused) return;
       raf = requestAnimationFrame(animate);
       const t = (clock.getElapsedTime() * 0.12) % 1;
       marker.position.copy(curve.getPointAt(t));
@@ -73,6 +75,18 @@ export default function ParcoursScene() {
       renderer.render(scene, camera);
     };
     animate();
+
+    const onVisChange = () => {
+      if (document.hidden) {
+        paused = true;
+        cancelAnimationFrame(raf);
+      } else {
+        paused = false;
+        clock.start();
+        animate();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisChange);
 
     const onResize = () => {
       const w = container.clientWidth, h = container.clientHeight;
@@ -84,6 +98,7 @@ export default function ParcoursScene() {
 
     return () => {
       cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", onVisChange);
       window.removeEventListener("resize", onResize);
       renderer.dispose();
       if (renderer.domElement.parentNode) {

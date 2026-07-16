@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useI18n } from "../i18n/I18nContext";
+import { useSiteData } from "../contexts/SiteDataContext";
 import Reveal from "./Reveal";
 
 const OPTIONS = ["opt1", "opt2", "opt3", "opt4", "opt5"];
 
 export default function Contact() {
   const { t } = useI18n();
+  const { contact } = useSiteData();
   const [project, setProject] = useState("");
   const [open, setOpen] = useState(false);
   const ddRef = useRef(null);
@@ -18,6 +20,12 @@ export default function Contact() {
     return () => document.removeEventListener("mousedown", onDoc);
   }, []);
 
+  const email = contact?.formEmail || contact?.email || "caledboukari@yahoo.com";
+  const phone1 = contact?.phone1 || "+22893707051";
+  const phone2 = contact?.phone2 || "";
+  const availability = t("db.contact.availability") || contact?.availability || t("c_avail1");
+  const location = t("db.contact.location") || contact?.location || "Lome, Togo, International / Remote";
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -26,7 +34,7 @@ export default function Contact() {
     const body = encodeURIComponent(
       "Projet: " + d.get("project") + "\n\n" + d.get("message") + "\n\n,  " + d.get("name") + " (" + d.get("email") + ")"
     );
-    window.location.href = "mailto:caledboukari@yahoo.com?subject=" + subject + "&body=" + body;
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -36,41 +44,45 @@ export default function Contact() {
           <div className="studio-border bg-surface rounded-lg p-md space-y-lg h-full technical-border">
             <h3 className="font-headline-md text-headline-md font-bold text-on-surface">{t("contact_title")}</h3>
             <div className="space-y-md">
-              <a className="block group" href="mailto:caledboukari@yahoo.com">
+              <a className="block group" href={`mailto:${email}`}>
                 <div className="p-md bg-surface-container technical-border glow-amber transition-all">
                   <div className="flex items-center gap-xs">
                     <span className="material-symbols-outlined text-lg text-on-surface-variant">mail</span>
                     <p className="font-label-sm text-on-surface-variant uppercase">{t("c_label_email")}</p>
                   </div>
-                  <p className="font-body-lg text-primary mt-xs truncate">caledboukari@yahoo.com</p>
+                  <p className="font-body-lg text-primary mt-xs truncate">{email}</p>
                 </div>
               </a>
-              <a className="block group" href="tel:+22893707051">
-                <div className="p-md bg-surface-container technical-border glow-amber transition-all">
-                  <div className="flex items-center gap-xs">
-                    <span className="material-symbols-outlined text-lg text-on-surface-variant">call</span>
-                    <p className="font-label-sm text-on-surface-variant uppercase">{t("c_label_phone")}</p>
+              {phone1 && (
+                <a className="block group" href={`tel:${phone1}`}>
+                  <div className="p-md bg-surface-container technical-border glow-amber transition-all">
+                    <div className="flex items-center gap-xs">
+                      <span className="material-symbols-outlined text-lg text-on-surface-variant">call</span>
+                      <p className="font-label-sm text-on-surface-variant uppercase">{t("c_label_phone")}</p>
+                    </div>
+                    <p className="font-body-lg text-primary mt-xs">{phone1}</p>
                   </div>
-                  <p className="font-body-lg text-primary mt-xs">+228 93 70 70 51</p>
-                </div>
-              </a>
-              <a className="block group" href="tel:+22899849707">
-                <div className="p-md bg-surface-container technical-border glow-amber transition-all">
-                  <div className="flex items-center gap-xs">
-                    <span className="material-symbols-outlined text-lg text-on-surface-variant">smartphone</span>
-                    <p className="font-label-sm text-on-surface-variant uppercase">{t("c_label_phone2")}</p>
+                </a>
+              )}
+              {phone2 && (
+                <a className="block group" href={`tel:${phone2}`}>
+                  <div className="p-md bg-surface-container technical-border glow-amber transition-all">
+                    <div className="flex items-center gap-xs">
+                      <span className="material-symbols-outlined text-lg text-on-surface-variant">smartphone</span>
+                      <p className="font-label-sm text-on-surface-variant uppercase">{t("c_label_phone2")}</p>
+                    </div>
+                    <p className="font-body-lg text-primary mt-xs">{phone2}</p>
                   </div>
-                  <p className="font-body-lg text-primary mt-xs">+228 99 84 97 07</p>
-                </div>
-              </a>
+                </a>
+              )}
             </div>
             <div className="pt-md space-y-sm">
               <p className="font-label-sm text-on-surface-variant uppercase border-b border-outline-variant pb-2">{t("c_avail")}</p>
               <div className="flex items-center gap-base">
-                <span className="font-body-md">{t("c_avail1")}</span>
+                <span className="font-body-md">{availability}</span>
               </div>
               <div className="flex items-center gap-base opacity-70">
-                <span className="font-body-md">Lomé, Togo ,  International / Remote</span>
+                <span className="font-body-md">{location}</span>
               </div>
             </div>
           </div>
@@ -131,7 +143,7 @@ export default function Contact() {
                             <button
                               type="button"
                               onClick={() => { setProject(label); setOpen(false); }}
-                              className={`w-full text-left flex items-center justify-between gap-base px-md py-sm font-body-md transition-colors ${active ? "text-primary bg-surface-container-high" : "text-on-surface hover:bg-surface-container-high"}`}
+                              className={`w-full text-left flex items-center justify-between gap-base px-md py-md font-body-md transition-colors min-h-[44px] ${active ? "text-primary bg-surface-container-high" : "text-on-surface hover:bg-surface-container-high"}`}
                             >
                               <span>{label}</span>
                               {active && <span className="material-symbols-outlined text-sm text-primary">check</span>}
@@ -156,7 +168,7 @@ export default function Contact() {
               </div>
               <div className="md:col-span-2 flex justify-between items-center pt-md">
                 <button
-                  className="flex items-center gap-xs justify-center bg-primary text-on-primary font-label-md uppercase tracking-widest px-lg py-sm hover:brightness-110 active:scale-95 transition-all glow-amber"
+                  className="flex items-center gap-xs justify-center bg-primary text-on-primary font-label-md uppercase tracking-widest px-lg py-md min-h-[48px] hover:brightness-110 active:scale-95 transition-all glow-amber"
                   type="submit"
                 >
                   <span className="material-symbols-outlined text-xl -rotate-45">send</span>

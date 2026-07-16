@@ -9,6 +9,7 @@ router.get("/key/:key", translationController.getByKey);
 router.post("/", translationController.create);
 router.post("/upsert", translationController.upsert);
 router.post("/bulk", translationController.bulkUpsert);
+router.post("/sync-db", translationController.syncDbContent);
 router.put("/:id", translationController.update);
 router.delete("/:id", translationController.delete);
 

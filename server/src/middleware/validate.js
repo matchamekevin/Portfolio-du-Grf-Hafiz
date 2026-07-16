@@ -3,9 +3,9 @@ import { z } from "zod";
 export const createShowreelSchema = z.object({
   title: z.string().min(1).max(255),
   href: z.string().min(1).max(500),
-  imageUrl: z.string().min(1).max(500),
-  imagePublicId: z.string().min(1).max(500),
-  subKey: z.string().min(1).max(255),
+  imageUrl: z.string().max(500).default(""),
+  imagePublicId: z.string().max(500).default(""),
+  subKey: z.string().max(255).default(""),
   delay: z.string().default("delay-100"),
   order: z.number().int().nonnegative().default(0),
   active: z.boolean().default(true),
@@ -56,8 +56,11 @@ export const updateHeroSchema = createHeroSchema.partial();
 
 export const createCtaSchema = z.object({
   title: z.string().min(1),
+  titleAccent: z.string().max(255).optional(),
   description: z.string().min(1),
+  engageLabel: z.string().max(255).optional(),
   engageHref: z.string().min(1).max(500),
+  cvLabel: z.string().max(255).optional(),
   cvHref: z.string().min(1).max(500),
 });
 
@@ -75,6 +78,7 @@ export const updateFooterSchema = createFooterSchema.partial();
 
 export const createContactSchema = z.object({
   email: z.string().email(),
+  formEmail: z.string().email().optional().or(z.literal("")),
   phone1: z.string().optional().or(z.literal("")),
   phone2: z.string().optional().or(z.literal("")),
   availability: z.string().optional().or(z.literal("")),

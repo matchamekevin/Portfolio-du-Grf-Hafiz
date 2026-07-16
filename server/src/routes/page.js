@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { contactController } from "../controllers/pageController.js";
+import { contactController, heroController, ctaController, footerController } from "../controllers/pageController.js";
 
 const router = Router();
 
@@ -8,13 +8,13 @@ router.put("/contact", contactController.updateFirst);
 router.post("/contact", contactController.create);
 router.put("/contact/:id", contactController.update);
 
-router.get("/hero", contactController.getFirst);
-router.put("/hero", contactController.updateFirst);
+router.get("/hero", heroController.getFirst);
+router.put("/hero", heroController.updateFirst);
 
-router.get("/cta", contactController.getFirst);
-router.put("/cta", contactController.updateFirst);
+router.get("/cta", ctaController.getFirst);
+router.put("/cta", ctaController.updateFirst);
 
-router.get("/footer", contactController.getFirst);
-router.put("/footer", contactController.updateFirst);
+router.get("/footer", footerController.getFirst);
+router.put("/footer", footerController.updateFirst);
 
 export default router;

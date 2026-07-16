@@ -1,18 +1,6 @@
 import { useI18n } from "../i18n/I18nContext";
+import { useSiteData } from "../contexts/SiteDataContext";
 import Reveal from "./Reveal";
-
-const CINEMA = [
-  { title: "SIFA", role: "f1_r", meta: "2024, Togo" },
-  { title: "Une fiancée à la barre", role: "f2_r", meta: "2023, Togo" },
-  { title: "Le retour sur la terre des ancêtres", role: "f3_r", meta: "2023, Bénin / Canada" },
-  { title: "Togoland Projections", role: "f4_r", meta: "2022, Togo / France / Allemagne" },
-  { title: "Agome Seva, de l'ombre à la lumière", role: "f5_r", meta: "2022, Togo / Belgique" }
-];
-
-const THEATRE = [
-  { title: "Young Confession", role: "f6_r", meta: "2024, Allemagne" },
-  { title: "Les statues rêvent aussi, vision d'un retour", role: "f7_r", meta: "2023, Burkina Faso" }
-];
 
 const ACCENT = {
   primary: { text: "text-primary", hover: "group-hover:text-primary" },
@@ -22,13 +10,14 @@ const ACCENT = {
 function Entry({ item, accent }) {
   const { t } = useI18n();
   const A = ACCENT[accent];
+  const role = (item.role && !item.role.includes(" ")) ? t(item.role) : item.role;
   return (
     <Reveal className="flex flex-col md:flex-row md:items-start md:gap-gutter justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-primary/40 group">
       <div className="md:flex-1">
         <h4 className={`font-headline-md text-headline-md text-on-surface ${A.hover} transition-colors`}>
           {item.title}
         </h4>
-        <p className="font-body-md text-body-md text-on-surface-variant mt-1">{t(item.role)}</p>
+        <p className="font-body-md text-body-md text-on-surface-variant mt-1">{role}</p>
       </div>
       <span className={`font-label-md text-label-md text-right md:text-right ${A.text} mt-base md:mt-0 md:shrink-0 opacity-70 ${A.hover} group-hover:opacity-100 transition-opacity`}>
         {item.meta}
@@ -39,28 +28,41 @@ function Entry({ item, accent }) {
 
 export default function Experiences() {
   const { t } = useI18n();
+  const { experiences = [], trajectoire } = useSiteData();
+
+  const cinema = experiences
+    .filter((e) => e.category === "cinema")
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+  const theatre = experiences
+    .filter((e) => e.category === "theatre")
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+  const danteItems = trajectoire?.danteItems || [];
+  const languages = trajectoire?.languages || [];
+
   return (
     <section className="py-xl bg-background/50" id="experiences">
       <div className="max-w-container-max mx-auto px-md">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
           <div className="md:col-span-4">
-            <div className="sticky top-24 z-30 relative -mx-3 px-3 pt-10 pb-8 bg-surface">
+            <div className="sticky top-14 md:top-24 z-30 relative -mx-3 px-3 pt-6 pb-4 md:pt-10 md:pb-8 bg-surface">
               <h2
-                className="font-headline-lg text-headline-lg text-on-surface"
+                className="font-headline-lg text-headline-lg text-on-surface break-words"
                 dangerouslySetInnerHTML={{ __html: t("exp_title") }}
               />
             </div>
             <div className="mt-md space-y-md">
               <div className="technical-border p-md bg-surface-container-low/80 hover:bg-surface-container-high transition-all hover:border-tertiary/40 group">
                 <span className="material-symbols-outlined text-tertiary mb-base group-hover:scale-110 transition-transform">verified</span>
-                <p className="font-body-md text-body-md text-on-surface">{t("dante_t")}</p>
-                <p className="font-label-sm text-label-sm text-on-surface-variant">{t("dante_s")}</p>
+                <p className="font-body-md text-body-md text-on-surface">{t("db.trajectoire.danteSubtitle") || trajectoire?.danteSubtitle || t("dante_t")}</p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">{t("db.trajectoire.danteTitle") || trajectoire?.danteTitle || t("dante_s")}</p>
               </div>
               <div className="technical-border p-md bg-surface-container-low/80">
                 <span className="material-symbols-outlined text-secondary mb-base">language</span>
                 <p className="font-label-md text-label-md text-on-surface-variant uppercase mb-xs">{t("lang_t")}</p>
                 <ul className="font-body-md text-body-md text-on-surface space-y-1 list-disc list-inside pl-1">
-                  {t("lang_v").split(", ").map((lang) => (
+                  {languages.map((lang) => (
                     <li key={lang}>{lang}</li>
                   ))}
                 </ul>
@@ -75,8 +77,8 @@ export default function Experiences() {
                 <div className="h-px w-12 bg-outline-variant/30" />
               </div>
               <div className="space-y-sm">
-                {CINEMA.map((item) => (
-                  <Entry key={item.title} item={item} accent="primary" />
+                {cinema.map((item) => (
+                  <Entry key={item.id} item={item} accent="primary" />
                 ))}
               </div>
             </div>
@@ -87,8 +89,8 @@ export default function Experiences() {
                 <div className="h-px w-12 bg-outline-variant/30" />
               </div>
               <div className="space-y-sm">
-                {THEATRE.map((item) => (
-                  <Entry key={item.title} item={item} accent="secondary" />
+                {theatre.map((item) => (
+                  <Entry key={item.id} item={item} accent="secondary" />
                 ))}
               </div>
             </div>

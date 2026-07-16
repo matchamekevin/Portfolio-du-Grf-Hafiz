@@ -1,6 +1,7 @@
 import prisma from "../config/prisma.js";
 import { createGallerySchema, updateGallerySchema } from "../middleware/validate.js";
 import { broadcastUpdate } from "./realtimeController.js";
+import { publicController } from "./publicController.js";
 
 export const galleryController = {
   getAll: async (req, res, next) => {
@@ -38,6 +39,7 @@ export const galleryController = {
       data: parsed.data,
     });
     broadcastUpdate();
+    publicController.invalidateCache();
     res.status(201).json({ status: "ok", data });
   },
 
@@ -52,6 +54,7 @@ export const galleryController = {
       data: parsed.data,
     });
     broadcastUpdate();
+    publicController.invalidateCache();
     res.json({ status: "ok", data });
   },
 
@@ -61,6 +64,7 @@ export const galleryController = {
       where: { id },
     });
     broadcastUpdate();
+    publicController.invalidateCache();
     res.json({ status: "ok", data });
   },
 };

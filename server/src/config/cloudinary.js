@@ -19,6 +19,7 @@ export async function uploadImage(file) {
         folder: config.cloudinary.folder,
         resource_type: "image",
         transformation: [{ quality: "auto:good" }, { fetch_format: "auto" }],
+        eager_async: false,
       },
       (err, result) => {
         if (err) return reject(err);

@@ -28,52 +28,60 @@ export default function Login() {
 
   return (
     <div className={`min-h-screen flex items-center justify-center px-4 ${mode === "dark" ? "admin-dark" : "admin-light"}`}>
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5 admin-card p-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-title-md text-admin-text">Admin</h1>
-          <button
-            type="button"
-            onClick={() => setMode(mode === "dark" ? "light" : "dark")}
-            className="admin-btn admin-btn-secondary text-xs"
-          >
-            {mode === "dark" ? "Clair" : "Sombre"}
-          </button>
-        </div>
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <div className="space-y-1">
-          <label className="admin-label">Email</label>
-          <input
-            className="admin-input"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@portfolio.local"
-            required
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="admin-label">Mot de passe</label>
-          <div className="relative">
-            <input
-              className="admin-input pr-10"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+      <div className="w-full max-w-sm">
+        <div className="admin-card p-8 space-y-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-semibold text-admin-text tracking-tight">Admin</h1>
             <button
               type="button"
-              onClick={() => setShowPassword((s) => !s)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-admin-muted hover:text-admin-text"
+              onClick={() => setMode(mode === "dark" ? "light" : "dark")}
+              className="admin-btn admin-btn-secondary text-xs"
             >
-              <span className="text-xs">{showPassword ? "🙈" : "👁"}</span>
+              {mode === "dark" ? "Clair" : "Sombre"}
             </button>
           </div>
+          {error && (
+            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+              <p className="text-sm text-red-500">{error}</p>
+            </div>
+          )}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1">
+              <label className="admin-label">Email</label>
+              <input
+                className="admin-input"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@portfolio.local"
+                required
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="admin-label">Mot de passe</label>
+              <div className="relative">
+                <input
+                  className="admin-input pr-10"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((s) => !s)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-admin-muted hover:text-admin-text transition-colors"
+                >
+                  <span className="text-base">{showPassword ? "🙈" : "👁"}</span>
+                </button>
+              </div>
+            </div>
+            <button type="submit" className="admin-btn admin-btn-primary w-full" disabled={loading}>
+              {loading ? "Connexion..." : "Se connecter"}
+            </button>
+          </form>
         </div>
-        <button type="submit" className="admin-btn admin-btn-primary w-full" disabled={loading}>
-          {loading ? "Connexion..." : "Se connecter"}
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

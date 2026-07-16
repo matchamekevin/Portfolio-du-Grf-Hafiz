@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import { api } from "../services/api";
+import { useRealtime } from "./RealtimeContext";
 
 const SiteDataContext = createContext(null);
 
@@ -40,32 +41,36 @@ export function SiteDataProvider({ children }) {
   });
   const [error, setError] = useState(null);
 
-  const fetchAll = () => {
-    let cancelled = false;
+  const fetchAll = useCallback(() => {
     setError(null);
     api.public
       .getAll()
       .then((res) => {
-        if (!cancelled && res && res.status === "ok") {
+        if (res && res.status === "ok") {
           const next = res.data;
           setData(next);
           writeCache(next);
         }
       })
-      .catch((e) => {
-        if (!cancelled) setError(e.message);
-      });
-    return () => { cancelled = true; };
-  };
+      .catch((e) => setError(e.message));
+  }, []);
 
   useEffect(() => {
     fetchAll();
-  }, []);
+  }, [fetchAll]);
+
+  useRealtime((payload) => {
+    if (payload?.type === "updated" || payload?.type === "translations-updated") {
+      fetchAll();
+    }
+  });
 
   const refresh = () => fetchAll();
 
+  const value = useMemo(() => ({ ...data, error, refresh }), [data, error]);
+
   return (
-    <SiteDataContext.Provider value={{ ...data, error, refresh }}>
+    <SiteDataContext.Provider value={value}>
       {children}
     </SiteDataContext.Provider>
   );

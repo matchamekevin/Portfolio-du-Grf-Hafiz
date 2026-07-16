@@ -1,11 +1,19 @@
 const API_BASE = '/api';
 
+function getToken() {
+  try { return localStorage.getItem("admin_token"); } catch { return null; }
+}
+
 async function request(path, options = {}) {
+  const token = getToken();
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+    headers,
     ...options,
   });
   if (!res.ok) {
@@ -75,6 +83,11 @@ export const api = {
     autoSync: (data) => request('/realtime/translations/auto-sync', { method: 'POST', body: JSON.stringify(data) }),
   },
 
+  trajectoire: {
+    get: () => request('/trajectoire'),
+    upsert: (data) => request('/trajectoire', { method: 'PUT', body: JSON.stringify(data) }),
+  },
+
   public: {
     getAll: () => request('/public/all'),
   },
@@ -90,14 +103,22 @@ export const api = {
     image: async (file) => {
       const form = new FormData();
       form.append('file', file);
-      const res = await fetch(`${API_BASE}/upload/image`, { method: 'POST', body: form });
-      if (!res.ok) throw new Error('Upload failed');
-      return res.json();
+      const token = getToken();
+      const headers = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const res = await fetch(`${API_BASE}/upload/image`, { method: 'POST', headers, body: form });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.message || `Erreur lors de l'envoi (HTTP ${res.status})`);
+      return json;
     },
     delete: (publicId) => request(`/upload/image/${encodeURIComponent(publicId)}`, { method: 'DELETE' }),
   },
 
   auth: {
     login: (email, password) => request('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
+    getProfile: () => request('/auth/me'),
+    updateProfile: (data) => request('/auth/me', { method: 'PUT', body: JSON.stringify(data) }),
+    changePassword: (data) => request('/auth/me/password', { method: 'PUT', body: JSON.stringify(data) }),
+    resetPassword: (data) => request('/auth/me/password/reset', { method: 'PUT', body: JSON.stringify(data) }),
   },
 };

@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { TRANSLATIONS, LANG_CODE } from "./translations";
+import { useRealtime } from "../contexts/RealtimeContext";
 
 const I18nContext = createContext(null);
 
@@ -15,28 +16,55 @@ export function I18nProvider({ children }) {
   const [lang, setLangState] = useState(() =>
     TRANSLATIONS[getInitialLang()] ? getInitialLang() : "fr"
   );
+  const [dbTranslations, setDbTranslations] = useState({});
+  const dbRef = useRef(dbTranslations);
+  dbRef.current = dbTranslations;
+
+  const fetchDbTranslations = useCallback((code) => {
+    fetch(`/api/translations/${code}`)
+      .then((r) => r.json())
+      .then((res) => {
+        if (res?.status === "ok" && Array.isArray(res.data)) {
+          const map = {};
+          for (const t of res.data) map[t.key] = t.value;
+          setDbTranslations(map);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = lang;
-    try {
-      localStorage.setItem("lang", lang);
-    } catch {}
-  }, [lang]);
+    try { localStorage.setItem("lang", lang); } catch {}
+    fetchDbTranslations(lang);
+  }, [lang, fetchDbTranslations]);
 
-  const setLang = (next) => {
-    if (TRANSLATIONS[next]) setLangState(next);
-  };
+  useRealtime((payload) => {
+    if (payload?.type === "updated" || payload?.type === "translations-updated") {
+      const current = getInitialLang();
+      fetchDbTranslations(current);
+    }
+  });
 
-  // Returns the translation for a key; falls back to French then the key itself.
-  const t = (key) => {
+  const setLang = useCallback((next) => {
+    if (TRANSLATIONS[next]) {
+      try { localStorage.setItem("lang", next); } catch {}
+      setLangState(next);
+    }
+  }, []);
+
+  const t = useCallback((key) => {
+    if (dbRef.current[key] !== undefined) return dbRef.current[key];
     const dict = TRANSLATIONS[lang] || TRANSLATIONS.fr;
     if (dict[key] !== undefined) return dict[key];
     if (TRANSLATIONS.fr[key] !== undefined) return TRANSLATIONS.fr[key];
     return key;
-  };
+  }, [lang]);
+
+  const value = useMemo(() => ({ lang, setLang, t, code: LANG_CODE[lang] || "FR", dbTranslations }), [lang, setLang, t, dbTranslations]);
 
   return (
-    <I18nContext.Provider value={{ lang, setLang, t, code: LANG_CODE[lang] || "FR" }}>
+    <I18nContext.Provider value={value}>
       {children}
     </I18nContext.Provider>
   );
