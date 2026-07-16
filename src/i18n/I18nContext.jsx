@@ -12,17 +12,43 @@ function getInitialLang() {
   }
 }
 
+function getBaseUrl() {
+  return import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "";
+}
+
+let preloadedDbTranslations = null;
+let preloadedLang = null;
+
+export function preloadTranslations() {
+  const lang = getInitialLang();
+  return fetch(`${getBaseUrl()}/translations/${lang}`)
+    .then((r) => r.json())
+    .then((res) => {
+      if (res?.status === "ok" && Array.isArray(res.data)) {
+        const map = {};
+        for (const t of res.data) map[t.key] = t.value;
+        preloadedDbTranslations = map;
+        preloadedLang = lang;
+      }
+    })
+    .catch(() => {});
+}
+
 export function I18nProvider({ children }) {
   const [lang, setLangState] = useState(() =>
     TRANSLATIONS[getInitialLang()] ? getInitialLang() : "fr"
   );
-  const [dbTranslations, setDbTranslations] = useState({});
+  const [dbTranslations, setDbTranslations] = useState(() => {
+    if (preloadedDbTranslations && preloadedLang === getInitialLang()) {
+      return preloadedDbTranslations;
+    }
+    return {};
+  });
   const dbRef = useRef(dbTranslations);
   dbRef.current = dbTranslations;
 
   const fetchDbTranslations = useCallback((code) => {
-    const baseUrl = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "";
-    fetch(`${baseUrl}/translations/${code}`)
+    fetch(`${getBaseUrl()}/translations/${code}`)
       .then((r) => r.json())
       .then((res) => {
         if (res?.status === "ok" && Array.isArray(res.data)) {
@@ -37,7 +63,12 @@ export function I18nProvider({ children }) {
   useEffect(() => {
     document.documentElement.lang = lang;
     try { localStorage.setItem("lang", lang); } catch {}
-    fetchDbTranslations(lang);
+    if (preloadedLang === lang && preloadedDbTranslations) {
+      preloadedDbTranslations = null;
+      preloadedLang = null;
+    } else {
+      fetchDbTranslations(lang);
+    }
   }, [lang, fetchDbTranslations]);
 
   useRealtime((payload) => {

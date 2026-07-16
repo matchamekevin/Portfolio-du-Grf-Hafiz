@@ -41,26 +41,32 @@ const EMPTY = {
 };
 
 let preloadedData = null;
+let preloadTimestamp = 0;
 
 export function preloadData() {
   const cached = readCache();
   if (cached) {
     preloadedData = cached;
+    preloadTimestamp = Date.now();
     return Promise.resolve(cached);
   }
   return api.public.getAll().then((res) => {
     if (res && res.status === "ok") {
       writeCache(res.data);
       preloadedData = res.data;
+      preloadTimestamp = Date.now();
       return res.data;
     }
     return EMPTY;
   }).catch(() => EMPTY);
 }
 
+const FRESH_TTL = 5000;
+
 export function SiteDataProvider({ children }) {
   const [data, setData] = useState(() => preloadedData || readCache() || EMPTY);
   const mountedRef = useRef(true);
+  const skipFirstRef = useRef(Date.now() - preloadTimestamp < FRESH_TTL);
 
   const fetchAll = useCallback(() => {
     api.public
@@ -70,6 +76,7 @@ export function SiteDataProvider({ children }) {
           setData(res.data);
           writeCache(res.data);
           preloadedData = res.data;
+          preloadTimestamp = Date.now();
         }
       })
       .catch(() => {});
@@ -77,7 +84,11 @@ export function SiteDataProvider({ children }) {
 
   useEffect(() => {
     mountedRef.current = true;
-    fetchAll();
+    if (skipFirstRef.current) {
+      skipFirstRef.current = false;
+    } else {
+      fetchAll();
+    }
     return () => { mountedRef.current = false; };
   }, [fetchAll]);
 

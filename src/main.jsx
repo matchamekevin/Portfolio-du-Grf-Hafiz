@@ -7,10 +7,14 @@ import App from "./App";
 import { ThemeProvider } from "./theme/ThemeContext";
 import { I18nProvider } from "./i18n/I18nContext";
 import { preloadData } from "./contexts/SiteDataContext";
+import { preloadTranslations } from "./i18n/I18nContext";
 import "@fontsource/material-symbols-outlined/latin-400.css";
 import "./index.css";
 
-preloadData().catch(() => {}).finally(() => {
+Promise.all([
+  preloadData().catch(() => {}),
+  preloadTranslations().catch(() => {}),
+]).finally(() => {
   createRoot(document.getElementById("root")).render(
     <StrictMode>
       <BrowserRouter>
