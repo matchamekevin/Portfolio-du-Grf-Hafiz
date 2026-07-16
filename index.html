@@ -2,12 +2,14 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='6'%20fill='%23131315'/%3E%3Cpath%20d='M6%2016h3l2-6%204%2014%203-10%202%205h6'%20fill='none'%20stroke='%23ffc688'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0 0 32 32'%3E%3Crect%20width='32'%20height='32'%20rx='6'%20fill='%23131315'/%3E%3Cpath%20d='M6%2016h3l2-6%204%2014%203-10%202%205h6'%20fill='none'%20stroke='%23ffc688'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Caled Boukari, Ingénieur du son (Cinéma &amp; Live)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="dns-prefetch" href="https://portfolio-du-grf-hafiz.onrender.com" />
+    <link rel="preconnect" href="https://portfolio-du-grf-hafiz.onrender.com" crossorigin />
     <script>
       (function() {
         try {
@@ -20,6 +22,36 @@
             html.classList.add('dark');
           }
         } catch {}
+      })();
+    </script>
+    <script>
+      (function() {
+        var API = 'https://portfolio-du-grf-hafiz.onrender.com/api';
+        var lang = 'fr';
+        try { lang = localStorage.getItem('lang') || 'fr'; } catch {}
+        window.__PRELOADED__ = { data: null, translations: null };
+        fetch(API + '/public/all').then(function(r) { return r.json(); }).then(function(res) {
+          if (res && res.status === 'ok') window.__PRELOADED__.data = res.data;
+        }).catch(function() {});
+        var tcKey = 'i18n_cache_' + lang;
+        try {
+          var raw = localStorage.getItem(tcKey);
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (Date.now() - parsed.ts < 86400000) {
+              window.__PRELOADED__.translations = parsed.data;
+              return;
+            }
+          }
+        } catch {}
+        fetch(API + '/translations/' + lang).then(function(r) { return r.json(); }).then(function(res) {
+          if (res && res.status === 'ok' && Array.isArray(res.data)) {
+            var map = {};
+            for (var i = 0; i < res.data.length; i++) map[res.data[i].key] = res.data[i].value;
+            window.__PRELOADED__.translations = map;
+            try { localStorage.setItem(tcKey, JSON.stringify({ ts: Date.now(), data: map })); } catch {}
+          }
+        }).catch(function() {});
       })();
     </script>
     <style>

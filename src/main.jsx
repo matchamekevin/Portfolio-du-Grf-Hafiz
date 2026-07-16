@@ -11,9 +11,12 @@ import { preloadTranslations } from "./i18n/I18nContext";
 import "@fontsource/material-symbols-outlined/latin-400.css";
 import "./index.css";
 
+const preloaded = window.__PRELOADED__;
+delete window.__PRELOADED__;
+
 Promise.all([
-  preloadData().catch(() => {}),
-  preloadTranslations().catch(() => {}),
+  preloadData(preloaded?.data).catch(() => {}),
+  preloadTranslations(preloaded?.translations).catch(() => {}),
 ]).finally(() => {
   createRoot(document.getElementById("root")).render(
     <StrictMode>

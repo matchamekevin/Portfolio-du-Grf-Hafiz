@@ -43,7 +43,13 @@ const EMPTY = {
 let preloadedData = null;
 let preloadTimestamp = 0;
 
-export function preloadData() {
+export function preloadData(inlineData) {
+  if (inlineData) {
+    preloadedData = inlineData;
+    preloadTimestamp = Date.now();
+    writeCache(inlineData);
+    return Promise.resolve(inlineData);
+  }
   const cached = readCache();
   if (cached) {
     preloadedData = cached;
