@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
-import { SiteDataProvider } from "./contexts/SiteDataContext";
+import { SiteDataProvider, useSiteData } from "./contexts/SiteDataContext";
 import { AdminThemeProvider } from "./contexts/AdminThemeContext";
 import { ToastProvider } from "./components/admin/Toast";
 import Navbar from "./components/Navbar";
@@ -19,6 +19,14 @@ const Admin = lazy(() => import("./pages/Admin"));
 const Login = lazy(() => import("./pages/Login"));
 
 function PublicLayout() {
+  const { loading } = useSiteData();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
   return (
     <>
       <ShaderBackground />

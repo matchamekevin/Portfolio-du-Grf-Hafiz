@@ -39,6 +39,7 @@ export function SiteDataProvider({ children }) {
     gallery: [],
     skills: [],
   });
+  const [loading, setLoading] = useState(() => !readCache());
   const [error, setError] = useState(null);
 
   const fetchAll = useCallback(() => {
@@ -50,9 +51,10 @@ export function SiteDataProvider({ children }) {
           const next = res.data;
           setData(next);
           writeCache(next);
+          setLoading(false);
         }
       })
-      .catch((e) => setError(e.message));
+      .catch((e) => { setError(e.message); setLoading(false); });
   }, []);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export function SiteDataProvider({ children }) {
 
   const refresh = () => fetchAll();
 
-  const value = useMemo(() => ({ ...data, error, refresh }), [data, error]);
+  const value = useMemo(() => ({ ...data, loading, error, refresh }), [data, loading, error]);
 
   return (
     <SiteDataContext.Provider value={value}>
