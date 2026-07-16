@@ -1,19 +1,19 @@
-import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { api } from "../services/api";
 import { useRealtime } from "./RealtimeContext";
 
 const SiteDataContext = createContext(null);
 
 const SITE_DATA_CACHE_KEY = "site_data_cache";
-const CACHE_TTL = 60 * 1000;
+const CACHE_TTL = 24 * 60 * 60 * 1000;
 
 function readCache() {
   try {
-    const raw = sessionStorage.getItem(SITE_DATA_CACHE_KEY);
+    const raw = localStorage.getItem(SITE_DATA_CACHE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (Date.now() - parsed.ts > CACHE_TTL) {
-      sessionStorage.removeItem(SITE_DATA_CACHE_KEY);
+      localStorage.removeItem(SITE_DATA_CACHE_KEY);
       return null;
     }
     return parsed.data;
@@ -24,41 +24,41 @@ function readCache() {
 
 function writeCache(data) {
   try {
-    sessionStorage.setItem(SITE_DATA_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+    localStorage.setItem(SITE_DATA_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
   } catch {}
 }
 
+const EMPTY = {
+  hero: null,
+  contact: null,
+  cta: null,
+  footer: null,
+  showreel: [],
+  experiences: [],
+  gallery: [],
+  skills: [],
+};
+
 export function SiteDataProvider({ children }) {
-  const [data, setData] = useState(() => readCache() || {
-    hero: null,
-    contact: null,
-    cta: null,
-    footer: null,
-    showreel: [],
-    experiences: [],
-    gallery: [],
-    skills: [],
-  });
-  const [loading, setLoading] = useState(() => !readCache());
-  const [error, setError] = useState(null);
+  const [data, setData] = useState(() => readCache() || EMPTY);
+  const mountedRef = useRef(true);
 
   const fetchAll = useCallback(() => {
-    setError(null);
     api.public
       .getAll()
       .then((res) => {
-        if (res && res.status === "ok") {
-          const next = res.data;
-          setData(next);
-          writeCache(next);
-          setLoading(false);
+        if (res && res.status === "ok" && mountedRef.current) {
+          setData(res.data);
+          writeCache(res.data);
         }
       })
-      .catch((e) => { setError(e.message); setLoading(false); });
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
+    mountedRef.current = true;
     fetchAll();
+    return () => { mountedRef.current = false; };
   }, [fetchAll]);
 
   useRealtime((payload) => {
@@ -69,7 +69,7 @@ export function SiteDataProvider({ children }) {
 
   const refresh = () => fetchAll();
 
-  const value = useMemo(() => ({ ...data, loading, error, refresh }), [data, loading, error]);
+  const value = useMemo(() => ({ ...data, refresh }), [data]);
 
   return (
     <SiteDataContext.Provider value={value}>
