@@ -23,7 +23,14 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(cors({ origin: config.corsOrigin }));
+const normalizedOrigin = config.corsOrigin?.replace(/\/+$/, "") || "*";
+app.use(cors({ origin: (origin, cb) => {
+  if (!origin || origin.replace(/\/+$/, "") === normalizedOrigin || normalizedOrigin === "*") {
+    cb(null, true);
+  } else {
+    cb(new Error("Not allowed by CORS"));
+  }
+}}));
 app.use(express.json({ limit: "1mb" }));
 
 app.get("/health", (req, res) => {
