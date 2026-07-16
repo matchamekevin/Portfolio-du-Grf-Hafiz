@@ -14,9 +14,17 @@ export function RealtimeProvider({ role, children }) {
   }, []);
 
   useEffect(() => {
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const query = role ? `?role=${role}` : "";
-    const wsUrl = `${protocol}//${window.location.host}/api/realtime/stream${query}`;
+    const apiUrl = import.meta.env.VITE_API_URL;
+    let wsUrl;
+    if (apiUrl) {
+      const wsProto = apiUrl.startsWith("https") ? "wss:" : "ws:";
+      const wsHost = apiUrl.replace(/^https?:\/\//, "");
+      wsUrl = `${wsProto}//${wsHost}/api/realtime/stream${query}`;
+    } else {
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      wsUrl = `${protocol}//${window.location.host}/api/realtime/stream${query}`;
+    }
 
     function connect() {
       const ws = new WebSocket(wsUrl);

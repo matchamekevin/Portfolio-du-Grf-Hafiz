@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: portfolio-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: CLOUDINARY_FOLDER
+        value: portfolio
+      - key: AUTH_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://portfolio-caled-boukari.vercel.app
+      - key: UPLOAD_MAX_FILE_SIZE
+        value: "52428800"
