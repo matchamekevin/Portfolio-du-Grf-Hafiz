@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import config from "./config/env.js";
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -44,10 +45,16 @@ app.use("/api/public", publicRoutes);
 
 if (config.nodeEnv === "production") {
   const distPath = path.resolve(__dirname, "../../dist");
-  app.use(express.static(distPath));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
-  });
+  if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(distPath, "index.html"));
+    });
+  } else {
+    app.use((req, res) => {
+      res.status(404).json({ status: "error", message: "Route not found" });
+    });
+  }
 } else {
   app.use((req, res) => {
     res.status(404).json({ status: "error", message: "Route not found" });
