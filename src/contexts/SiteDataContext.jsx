@@ -37,6 +37,7 @@ const EMPTY = {
   experiences: [],
   gallery: [],
   skills: [],
+  trajectoire: null,
 };
 
 let preloadedData = null;
