@@ -4,13 +4,13 @@ import Reveal from "./Reveal";
 
 export default function CallToAction() {
   const { cta } = useSiteData();
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   if (!cta) return null;
-  const title = t("db.cta.title") || cta.title;
-  const titleAccent = t("db.cta.titleAccent") || cta.titleAccent;
-  const description = t("db.cta.description") || cta.description;
-  const engageLabel = t("db.cta.engageLabel") || cta.engageLabel;
-  const cvLabel = t("db.cta.cvLabel") || cta.cvLabel;
+  const title = cta.title;
+  const titleAccent = cta.titleAccent;
+  const description = cta.description;
+  const engageLabel = cta.engageLabel;
+  const cvLabel = cta.cvLabel;
   const titleHtml = titleAccent
     ? `${title} <span class="text-primary">${titleAccent}</span>`
     : title;

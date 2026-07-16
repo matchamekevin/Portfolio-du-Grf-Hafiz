@@ -16,6 +16,8 @@ services:
         value: portfolio
       - key: AUTH_SECRET
         sync: false
+      - key: DEEPL_API_KEY
+        value: "be17ceba-c3c5-4da5-9f84-13bba0c4c024:fx"
       - key: CORS_ORIGIN
         value: https://portfolio-caled-boukari.vercel.app
       - key: UPLOAD_MAX_FILE_SIZE

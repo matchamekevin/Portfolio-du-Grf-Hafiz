@@ -108,8 +108,17 @@ export function SiteDataProvider({ children }) {
       }
     } else if (payload?.type === "translations-updated") {
       fetchAll();
+    } else if (payload?.type === "reconnected") {
+      fetchAll();
     }
   });
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (mountedRef.current) fetchAll();
+    }, 60000);
+    return () => clearInterval(id);
+  }, [fetchAll]);
 
   const refresh = () => fetchAll();
 

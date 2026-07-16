@@ -72,7 +72,7 @@ async function withTimeout(promise, ms) {
   }
 }
 
-const MEMORY_KEY = process.env.MYMEMORY_EMAIL || "";
+const DEEPL_KEY = process.env.DEEPL_API_KEY || "";
 
 function stripHtml(text) {
   return text
@@ -83,28 +83,36 @@ function stripHtml(text) {
     .trim();
 }
 
-async function translateMyMemory(text, from, to) {
+async function translateDeepL(text, from, to) {
   const clean = stripHtml(text);
   if (!clean) return text;
-  const params = new URLSearchParams({ q: clean, langpair: `${from}|${to}` });
-  if (MEMORY_KEY) params.set("de", MEMORY_KEY);
-  const url = `https://api.mymemory.translated.net/get?${params.toString()}`;
-  const res = await withTimeout(fetch(url), 10000);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  if (data.responseStatus !== 200 && data.responseStatus !== "200") {
-    throw new Error(data.responseDetails || "translation failed");
+  const langMap = { fr: "FR", en: "EN-GB", de: "DE", es: "ES", pt: "PT" };
+  const targetLang = langMap[to] || to.toUpperCase();
+  const sourceLang = langMap[from] || from.toUpperCase();
+  const url = "https://api-free.deepl.com/v2/translate";
+  const res = await withTimeout(
+    fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `DeepL-Auth-Key ${DEEPL_KEY}` },
+      body: JSON.stringify({ text: [clean], source_lang: sourceLang, target_lang: targetLang }),
+    }),
+    15000
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `DeepL HTTP ${res.status}`);
   }
-  return data.responseData.translatedText;
+  const data = await res.json();
+  return data.translations?.[0]?.text || text;
 }
 
 async function translateWithRetry(text, from, to, retries = 3) {
   let lastErr;
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const translated = await translateMyMemory(text, from, to);
-      if (translated && !/MYMEMORY WARNING/.test(translated)) return translated;
-      throw new Error("empty/blocked translation");
+      const translated = await translateDeepL(text, from, to);
+      if (translated) return translated;
+      throw new Error("empty translation");
     } catch (err) {
       lastErr = err;
       const delay = Math.min(400 * Math.pow(2, attempt), 4000);
@@ -288,7 +296,8 @@ export async function broadcastUpdate(type = "updated") {
         trajectoire: trajectoire || null,
       },
     });
-  } catch {
+  } catch (err) {
+    console.error("[broadcast] Failed to fetch data:", err.message);
     realtimeController.broadcast({ type, timestamp: Date.now() });
   }
 }

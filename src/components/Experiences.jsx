@@ -8,7 +8,7 @@ const ACCENT = {
 };
 
 function Entry({ item, accent }) {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   const A = ACCENT[accent];
   const role = (item.role && !item.role.includes(" ")) ? t(item.role) : item.role;
   return (
@@ -27,7 +27,7 @@ function Entry({ item, accent }) {
 }
 
 export default function Experiences() {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   const { experiences = [], trajectoire } = useSiteData();
 
   const cinema = experiences
@@ -55,8 +55,8 @@ export default function Experiences() {
             <div className="mt-md space-y-md">
               <div className="technical-border p-md bg-surface-container-low/80 hover:bg-surface-container-high transition-all hover:border-tertiary/40 group">
                 <span className="material-symbols-outlined text-tertiary mb-base group-hover:scale-110 transition-transform">verified</span>
-                <p className="font-body-md text-body-md text-on-surface">{t("db.trajectoire.danteSubtitle") || trajectoire?.danteSubtitle || t("dante_t")}</p>
-                <p className="font-label-sm text-label-sm text-on-surface-variant">{t("db.trajectoire.danteTitle") || trajectoire?.danteTitle || t("dante_s")}</p>
+                <p className="font-body-md text-body-md text-on-surface">{trajectoire?.danteSubtitle || t("dante_t")}</p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">{trajectoire?.danteTitle || t("dante_s")}</p>
               </div>
               <div className="technical-border p-md bg-surface-container-low/80">
                 <span className="material-symbols-outlined text-secondary mb-base">language</span>

@@ -2,11 +2,11 @@ import { useI18n } from "../i18n/I18nContext";
 import { useSiteData } from "../contexts/SiteDataContext";
 
 export default function Footer() {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   const { footer } = useSiteData();
   if (!footer) return null;
-  const footerName = t("db.footer.name") || footer.name;
-  const footerCopyright = t("db.footer.copyright") || footer.copyright;
+  const footerName = footer.name;
+  const footerCopyright = footer.copyright;
   return (
     <footer className="w-full py-md bg-surface-container-lowest/80 border-t border-outline-variant/30">
       <div className="flex flex-col md:flex-row justify-between items-center px-md max-w-container-max mx-auto gap-md">

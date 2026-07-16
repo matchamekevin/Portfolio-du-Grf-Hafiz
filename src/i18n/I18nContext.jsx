@@ -12,9 +12,7 @@ function getInitialLang() {
   }
 }
 
-const API_BASE = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL}/api`
-  : "/api";
+const API_BASE = "/api";
 
 const TRANS_CACHE_KEY = "i18n_cache";
 const TRANS_CACHE_TTL = 24 * 60 * 60 * 1000;
@@ -144,7 +142,13 @@ export function I18nProvider({ children }) {
     return key;
   }, [lang]);
 
-  const value = useMemo(() => ({ lang, setLang, t, code: LANG_CODE[lang] || "FR", dbTranslations }), [lang, setLang, t, dbTranslations]);
+  const tr = useCallback((key, fallback) => {
+    const val = t(key);
+    if (val && val !== key) return val;
+    return fallback ?? key;
+  }, [t]);
+
+  const value = useMemo(() => ({ lang, setLang, t, tr, code: LANG_CODE[lang] || "FR", dbTranslations }), [lang, setLang, t, tr, dbTranslations]);
 
   if (!dbTranslations) return null;
 

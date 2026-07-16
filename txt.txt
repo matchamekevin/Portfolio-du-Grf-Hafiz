@@ -6,11 +6,20 @@ les textes :
 
 
 
-(404: NOT_FOUND
-Code: NOT_FOUND
-ID: cpt1::n7pxp-1784168913287-b1ab8e90a455
+(<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-lg delay-100 opacity-0 animate-fade-in-up">Ingenieur du son specialise en prise de son, montage et mixage pour le cinema et les performances en direct. Une trajectoire forgee au Togo et affinee sur des projets menes avec des organisations francaises et allemandes.</p>) 
 
-Read our documentation to learn more about this error.) en prod l'admin est inaccessible 
+cette partie ne charge pas ce que l'admin mets ou modifie, corriges moi ca.
 
 
 
+
+
+
+(<span class="font-body-md">International / Remote / Lome, Togo, International / Remote</span>) 
+
+ici se double facon bizzarre en traduction, corriges moi ca.
+
+
+
+
+mais pour la traduction il y a toujours des textes qui ne sont pas traduits correctement.

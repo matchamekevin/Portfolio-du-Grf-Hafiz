@@ -30,7 +30,13 @@ export function RealtimeProvider({ role, children }) {
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
-      ws.onopen = () => { retriesRef.current = 0; };
+      ws.onopen = () => {
+        const wasReconnect = retriesRef.current > 0;
+        retriesRef.current = 0;
+        if (wasReconnect) {
+          for (const cb of listenersRef.current) cb({ type: "reconnected" });
+        }
+      };
 
       ws.onerror = () => {};
 

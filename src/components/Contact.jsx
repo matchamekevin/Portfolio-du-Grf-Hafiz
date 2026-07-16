@@ -6,7 +6,7 @@ import Reveal from "./Reveal";
 const OPTIONS = ["opt1", "opt2", "opt3", "opt4", "opt5"];
 
 export default function Contact() {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   const { contact } = useSiteData();
   const [project, setProject] = useState("");
   const [open, setOpen] = useState(false);
@@ -23,16 +23,16 @@ export default function Contact() {
   const email = contact?.formEmail || contact?.email || "caledboukari@yahoo.com";
   const phone1 = contact?.phone1 || "+22893707051";
   const phone2 = contact?.phone2 || "";
-  const availability = t("db.contact.availability") || contact?.availability || t("c_avail1");
-  const location = t("db.contact.location") || contact?.location || "Lome, Togo, International / Remote";
+  const availability = tr("db.contact.availability", contact?.availability || t("c_avail1"));
+  const location = tr("db.contact.location", contact?.location || "Lome, Togo, International / Remote");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     const d = new FormData(form);
-    const subject = encodeURIComponent("Nouveau message ,  " + (d.get("name") || ""));
+    const subject = encodeURIComponent(tr("email_subject", "Nouveau message, ") + (d.get("name") || ""));
     const body = encodeURIComponent(
-      "Projet: " + d.get("project") + "\n\n" + d.get("message") + "\n\n,  " + d.get("name") + " (" + d.get("email") + ")"
+      tr("email_project", "Projet: ") + d.get("project") + "\n\n" + d.get("message") + "\n\n,  " + d.get("name") + " (" + d.get("email") + ")"
     );
     window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
   };

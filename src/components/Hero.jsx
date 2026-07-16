@@ -6,12 +6,12 @@ const ThreeScene = lazy(() => import("./ThreeScene"));
 
 export default function Hero() {
   const { hero, contact } = useSiteData();
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
 
-  const status = t("db.hero.status") || hero?.status || t("hero_status");
-  const title = t("db.hero.title") || hero?.title || t("hero_title");
-  const subtitle = t("db.hero.subtitle") || hero?.subtitle || t("hero_sub");
-  const badge = t("db.hero.badge") || hero?.badge || t("hero_badge");
+  const status = hero?.status || t("hero_status");
+  const title = hero?.title || t("hero_title");
+  const subtitle = hero?.subtitle || t("hero_sub");
+  const badge = hero?.badge || t("hero_badge");
   const availability = contact?.availability || t("hero_status");
   const location = contact?.location || "Lome, Togo";
 
