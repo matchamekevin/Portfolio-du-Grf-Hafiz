@@ -39,6 +39,17 @@ const EMPTY = {
   skills: [],
 };
 
+export function preloadData() {
+  const cached = readCache();
+  if (cached) return Promise.resolve(cached);
+  return api.public.getAll().then((res) => {
+    if (res && res.status === "ok") {
+      writeCache(res.data);
+      return res.data;
+    }
+  }).catch(() => null);
+}
+
 export function SiteDataProvider({ children }) {
   const [data, setData] = useState(() => readCache() || EMPTY);
   const mountedRef = useRef(true);
