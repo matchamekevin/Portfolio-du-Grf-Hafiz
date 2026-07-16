@@ -48,7 +48,12 @@ export function RealtimeProvider({ role, children }) {
       };
     }
 
-    connect();
+    const startConnection = () => connect();
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(startConnection, { timeout: 3000 });
+    } else {
+      setTimeout(startConnection, 1000);
+    }
 
     return () => {
       clearTimeout(retryRef.current);

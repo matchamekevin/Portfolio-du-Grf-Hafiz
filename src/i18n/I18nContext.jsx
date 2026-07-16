@@ -12,16 +12,16 @@ function getInitialLang() {
   }
 }
 
-function getBaseUrl() {
-  return import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "";
-}
+const API_BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : "/api";
 
 let preloadedDbTranslations = null;
 let preloadedLang = null;
 
 export function preloadTranslations() {
   const lang = getInitialLang();
-  return fetch(`${getBaseUrl()}/translations/${lang}`)
+  return fetch(`${API_BASE}/translations/${lang}`)
     .then((r) => r.json())
     .then((res) => {
       if (res?.status === "ok" && Array.isArray(res.data)) {
@@ -42,13 +42,13 @@ export function I18nProvider({ children }) {
     if (preloadedDbTranslations && preloadedLang === getInitialLang()) {
       return preloadedDbTranslations;
     }
-    return {};
+    return null;
   });
   const dbRef = useRef(dbTranslations);
   dbRef.current = dbTranslations;
 
   const fetchDbTranslations = useCallback((code) => {
-    fetch(`${getBaseUrl()}/translations/${code}`)
+    fetch(`${API_BASE}/translations/${code}`)
       .then((r) => r.json())
       .then((res) => {
         if (res?.status === "ok" && Array.isArray(res.data)) {
@@ -86,7 +86,7 @@ export function I18nProvider({ children }) {
   }, []);
 
   const t = useCallback((key) => {
-    if (dbRef.current[key] !== undefined) return dbRef.current[key];
+    if (dbRef.current && dbRef.current[key] !== undefined) return dbRef.current[key];
     const dict = TRANSLATIONS[lang] || TRANSLATIONS.fr;
     if (dict[key] !== undefined) return dict[key];
     if (TRANSLATIONS.fr[key] !== undefined) return TRANSLATIONS.fr[key];
@@ -94,6 +94,8 @@ export function I18nProvider({ children }) {
   }, [lang]);
 
   const value = useMemo(() => ({ lang, setLang, t, code: LANG_CODE[lang] || "FR", dbTranslations }), [lang, setLang, t, dbTranslations]);
+
+  if (!dbTranslations) return null;
 
   return (
     <I18nContext.Provider value={value}>

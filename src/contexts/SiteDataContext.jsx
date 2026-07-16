@@ -64,7 +64,7 @@ export function preloadData() {
 const FRESH_TTL = 5000;
 
 export function SiteDataProvider({ children }) {
-  const [data, setData] = useState(() => preloadedData || readCache() || EMPTY);
+  const [data, setData] = useState(() => preloadedData || readCache() || null);
   const mountedRef = useRef(true);
   const skipFirstRef = useRef(Date.now() - preloadTimestamp < FRESH_TTL);
 
@@ -101,6 +101,8 @@ export function SiteDataProvider({ children }) {
   const refresh = () => fetchAll();
 
   const value = useMemo(() => ({ ...data, refresh }), [data]);
+
+  if (!data) return null;
 
   return (
     <SiteDataContext.Provider value={value}>
