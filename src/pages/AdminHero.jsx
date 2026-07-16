@@ -203,14 +203,9 @@ export default function AdminHero() {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="admin-card p-6 space-y-4">
         <h3 className="text-sm font-semibold text-admin-text uppercase tracking-wide">Informations générales</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Statut" hint="Ex: Disponible, En tournage…">
-            <input className="admin-input" value={data.status || ""} onChange={(e) => update({ status: e.target.value })} />
-          </Field>
-          <Field label="Badge" hint="Texte sur le badge 3D">
-            <input className="admin-input" value={data.badge || ""} onChange={(e) => update({ badge: e.target.value })} />
-          </Field>
-        </div>
+        <Field label="Badge" hint="Texte sur le badge 3D">
+          <input className="admin-input" value={data.badge || ""} onChange={(e) => update({ badge: e.target.value })} />
+        </Field>
         <Field label="Sous-titre" hint="Description sous le titre">
           <textarea className="admin-input" rows={3} value={data.subtitle || ""} onChange={(e) => update({ subtitle: e.target.value })} />
         </Field>

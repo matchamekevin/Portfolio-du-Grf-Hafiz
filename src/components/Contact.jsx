@@ -24,7 +24,7 @@ export default function Contact() {
   const phone1 = contact?.phone1 || "+22893707051";
   const phone2 = contact?.phone2 || "";
   const availability = tr("db.contact.availability", contact?.availability || t("c_avail1"));
-  const location = tr("db.contact.location", contact?.location || "Lome, Togo, International / Remote");
+  const location = tr("db.contact.location", contact?.location || "Lome, Togo");
 
   const handleSubmit = (e) => {
     e.preventDefault();

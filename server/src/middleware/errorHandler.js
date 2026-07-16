@@ -1,4 +1,5 @@
 import { ZodError } from "zod";
+import { CloudinaryUploadError } from "../config/cloudinary.js";
 
 export const errorHandler = (err, req, res, next) => {
   console.error("[API Error]", err.message);
@@ -12,6 +13,10 @@ export const errorHandler = (err, req, res, next) => {
         message: e.message,
       })),
     });
+  }
+
+  if (err instanceof CloudinaryUploadError) {
+    return res.status(400).json({ status: "error", message: err.message });
   }
 
   if (err.code === "LIMIT_FILE_SIZE") {

@@ -74,27 +74,21 @@ async function withTimeout(promise, ms) {
 
 const DEEPL_KEY = process.env.DEEPL_API_KEY || "";
 
-function stripHtml(text) {
-  return text
-    .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 async function translateDeepL(text, from, to) {
-  const clean = stripHtml(text);
-  if (!clean) return text;
+  const input = text || "";
+  const hasTags = /<[^>]+>/.test(input);
+  if (!input.trim()) return text;
   const langMap = { fr: "FR", en: "EN-GB", de: "DE", es: "ES", pt: "PT" };
   const targetLang = langMap[to] || to.toUpperCase();
   const sourceLang = langMap[from] || from.toUpperCase();
   const url = "https://api-free.deepl.com/v2/translate";
+  const body = { text: [input], source_lang: sourceLang, target_lang: targetLang };
+  if (hasTags) body.tag_handling = "html";
   const res = await withTimeout(
     fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `DeepL-Auth-Key ${DEEPL_KEY}` },
-      body: JSON.stringify({ text: [clean], source_lang: sourceLang, target_lang: targetLang }),
+      body: JSON.stringify(body),
     }),
     15000
   );
@@ -135,6 +129,8 @@ async function runPool(tasks, concurrency) {
   await Promise.all(workers);
   return results;
 }
+
+export { translateDeepL, translateWithRetry };
 
 export const autoTranslationController = {
   syncMissing: async (req, res, next) => {

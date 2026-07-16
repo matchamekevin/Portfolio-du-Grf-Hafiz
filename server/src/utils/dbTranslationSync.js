@@ -1,4 +1,5 @@
 import prisma from "../config/prisma.js";
+import { translateDeepL } from "../controllers/realtimeController.js";
 
 export async function extractDbContent() {
   const [hero, cta, contact, footer, trajectoire] = await Promise.all([
@@ -88,13 +89,24 @@ export async function syncDbTranslations() {
     });
   }
 
-  // 4. Insert only missing non-FR rows
+  // 4. Insert only missing non-FR rows, translating from FR with DeepL
   const toCreate = nonFrRows.filter((r) => !existingSet.has(`${r.key}::${r.language}`));
   if (toCreate.length > 0) {
-    await prisma.translation.createMany({
-      data: toCreate.map((r) => ({ key: r.key, language: r.language, value: r.value, source: "db" })),
-      skipDuplicates: true,
-    });
+    const data = await Promise.all(
+      toCreate.map(async (r) => {
+        let value = r.value;
+        if (r.language !== "fr") {
+          try {
+            const translated = await translateDeepL(r.value, "fr", r.language);
+            if (translated && translated !== r.value) value = translated;
+          } catch {
+            value = r.value;
+          }
+        }
+        return { key: r.key, language: r.language, value, source: "db" };
+      })
+    );
+    await prisma.translation.createMany({ data, skipDuplicates: true });
   }
 
   return { total: allRows.length, created: toCreate.length };

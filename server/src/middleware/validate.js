@@ -17,7 +17,7 @@ export const createExperienceSchema = z.object({
   title: z.string().min(1).max(255),
   role: z.string().min(1).max(255),
   meta: z.string().min(1).max(255),
-  category: z.enum(["cinema", "theatre"]),
+  category: z.string().min(1).max(50),
   order: z.number().int().nonnegative().default(0),
   active: z.boolean().default(true),
 });

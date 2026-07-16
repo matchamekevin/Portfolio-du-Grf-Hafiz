@@ -247,6 +247,17 @@ html.icons-ready .material-symbols-outlined { visibility: visible; }
   box-shadow: 0 0 0 3px rgba(125, 125, 125, 0.15);
 }
 
+.admin-input:-webkit-autofill,
+.admin-input:-webkit-autofill:hover,
+.admin-input:-webkit-autofill:focus,
+.admin-input:-webkit-autofill:active {
+  -webkit-text-fill-color: rgb(var(--admin-text) / 1) !important;
+  -webkit-box-shadow: 0 0 0 1000px rgb(var(--admin-bg) / 1) inset !important;
+  box-shadow: 0 0 0 1000px rgb(var(--admin-bg) / 1) inset !important;
+  caret-color: rgb(var(--admin-text) / 1);
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 .admin-label {
   display: block;
   font-size: 12px;
