@@ -5,7 +5,7 @@ import { useRealtime } from "./RealtimeContext";
 const SiteDataContext = createContext(null);
 
 const SITE_DATA_CACHE_KEY = "site_data_cache";
-const CACHE_TTL = 24 * 60 * 60 * 1000;
+const CACHE_TTL = 30_000;
 
 function readCache() {
   try {
@@ -63,26 +63,32 @@ export function preloadData(inlineData) {
       preloadTimestamp = Date.now();
       return res.data;
     }
+    preloadedData = EMPTY;
     return EMPTY;
-  }).catch(() => EMPTY);
+  }).catch(() => {
+    preloadedData = EMPTY;
+    return EMPTY;
+  });
 }
 
-const FRESH_TTL = 5000;
-
 export function SiteDataProvider({ children }) {
-  const [data, setData] = useState(() => preloadedData || readCache() || null);
+  const [data, setData] = useState(() => preloadedData || readCache() || EMPTY);
   const mountedRef = useRef(true);
-  const skipFirstRef = useRef(Date.now() - preloadTimestamp < FRESH_TTL);
+  const prevDataRef = useRef(data);
 
   const fetchAll = useCallback(() => {
     api.public
       .getAll()
       .then((res) => {
         if (res && res.status === "ok" && mountedRef.current) {
-          setData(res.data);
-          writeCache(res.data);
-          preloadedData = res.data;
-          preloadTimestamp = Date.now();
+          const next = res.data;
+          if (next && next !== prevDataRef.current) {
+            prevDataRef.current = next;
+            setData(next);
+            writeCache(next);
+            preloadedData = next;
+            preloadTimestamp = Date.now();
+          }
         }
       })
       .catch(() => {});
@@ -90,26 +96,23 @@ export function SiteDataProvider({ children }) {
 
   useEffect(() => {
     mountedRef.current = true;
-    if (skipFirstRef.current) {
-      skipFirstRef.current = false;
-    } else {
-      fetchAll();
-    }
+    fetchAll();
     return () => { mountedRef.current = false; };
   }, [fetchAll]);
 
   useRealtime((payload) => {
     if (payload?.type === "updated" && payload.data) {
-      if (mountedRef.current) {
+      if (mountedRef.current && payload.data !== prevDataRef.current) {
+        prevDataRef.current = payload.data;
         setData(payload.data);
         writeCache(payload.data);
         preloadedData = payload.data;
         preloadTimestamp = Date.now();
       }
-    } else if (payload?.type === "translations-updated") {
-      fetchAll();
     } else if (payload?.type === "reconnected") {
-      fetchAll();
+      if (mountedRef.current && Date.now() - preloadTimestamp > 30000) {
+        fetchAll();
+      }
     }
   });
 
@@ -123,8 +126,6 @@ export function SiteDataProvider({ children }) {
   const refresh = () => fetchAll();
 
   const value = useMemo(() => ({ ...data, refresh }), [data]);
-
-  if (!data) return null;
 
   return (
     <SiteDataContext.Provider value={value}>

@@ -1,16 +1,16 @@
 import { useSiteData } from "../contexts/SiteDataContext";
-import { useI18n } from "../i18n/I18nContext";
+import { useTranslations } from "../hooks/useTranslations.jsx";
 import Reveal from "./Reveal";
 
 export default function CallToAction() {
   const { cta } = useSiteData();
-  const { t, tr } = useI18n();
+  const { t, tr } = useTranslations();
   if (!cta) return null;
-  const title = cta.title;
-  const titleAccent = cta.titleAccent;
-  const description = cta.description;
-  const engageLabel = cta.engageLabel;
-  const cvLabel = cta.cvLabel;
+  const title = tr("db.cta.title", cta.title);
+  const titleAccent = tr("db.cta.titleAccent", cta.titleAccent);
+  const description = tr("db.cta.description", cta.description);
+  const engageLabel = tr("db.cta.engageLabel", cta.engageLabel);
+  const cvLabel = tr("db.cta.cvLabel", cta.cvLabel);
   const titleHtml = titleAccent
     ? `${title} <span class="text-primary">${titleAccent}</span>`
     : title;

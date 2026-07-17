@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { useI18n } from "../i18n/I18nContext";
-import { LANGUAGES } from "../i18n/translations";
+import { useTranslations } from "../hooks/useTranslations.jsx";
+import Icon from "./Icon";
 
 export default function LanguageSwitcher() {
-  const { lang, setLang, code } = useI18n();
+  const { lang, setLang, code, languages } = useTranslations();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
 
@@ -34,15 +34,15 @@ export default function LanguageSwitcher() {
           setOpen((o) => !o);
         }}
       >
-        <span className="material-symbols-outlined text-base">translate</span>
+        <Icon name="translate" className="text-base" />
         <span id="lang-current" className="flex items-center gap-1">
-          <span aria-hidden="true">{LANGUAGES.find((l) => l.code === lang)?.flag}</span>
+          <span aria-hidden="true">{languages.find((l) => l.code === lang)?.flag}</span>
           {code}
         </span>
-        <span className="material-symbols-outlined text-xs">expand_more</span>
+        <Icon name="expand_more" className="text-xs" />
       </button>
       <ul className={`lang-menu ${open ? "open" : ""}`} id="lang-menu" role="menu">
-        {LANGUAGES.map((l) => (
+        {languages.map((l) => (
           <li role="none" key={l.code}>
             <button
               className={`lang-item ${l.code === lang ? "active" : ""}`}
@@ -56,7 +56,7 @@ export default function LanguageSwitcher() {
                 <span aria-hidden="true" className="text-base leading-none">{l.flag}</span>
                 {l.label}
               </span>
-              <span className="material-symbols-outlined">check</span>
+              <Icon name="check" />
             </button>
           </li>
         ))}

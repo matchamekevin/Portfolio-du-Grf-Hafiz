@@ -81,6 +81,7 @@ export const api = {
     update: (id, data) => request(`/translations/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id) => request(`/translations/${id}`, { method: 'DELETE' }),
     autoSync: (data) => request('/realtime/translations/auto-sync', { method: 'POST', body: JSON.stringify(data) }),
+    syncDb: () => request('/translations/sync-db', { method: 'POST' }),
   },
 
   trajectoire: {

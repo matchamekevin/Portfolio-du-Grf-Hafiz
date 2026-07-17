@@ -1,12 +1,13 @@
-import { useI18n } from "../i18n/I18nContext";
+import { useTranslations } from "../hooks/useTranslations.jsx";
 import { useSiteData } from "../contexts/SiteDataContext";
+import Icon from "./Icon";
 
 export default function Footer() {
-  const { t, tr } = useI18n();
+  const { t, tr } = useTranslations();
   const { footer } = useSiteData();
   if (!footer) return null;
   const footerName = footer.name;
-  const footerCopyright = footer.copyright;
+  const footerCopyright = tr("db.footer.copyright", footer.copyright);
   return (
     <footer className="w-full py-md bg-surface-container-lowest/80 border-t border-outline-variant/30">
       <div className="flex flex-col md:flex-row justify-between items-center px-md max-w-container-max mx-auto gap-md">
@@ -20,22 +21,22 @@ export default function Footer() {
         <div className="flex flex-wrap justify-center gap-md sm:gap-lg">
           {footer.email && (
             <a className="flex items-center gap-xs text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-all py-2" href={`mailto:${footer.email}`}>
-              <span className="material-symbols-outlined text-base">mail</span>
+              <Icon name="mail" className="text-base" />
               {t("c_label_email")}
             </a>
           )}
           {footer.phone && (
             <a className="flex items-center gap-xs text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-all py-2" href={`tel:${footer.phone}`}>
-              <span className="material-symbols-outlined text-base">call</span>
+              <Icon name="call" className="text-base" />
               {footer.phone}
             </a>
           )}
-          {footer.vimeoUrl && (
-            <a className="flex items-center gap-xs text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-all py-2" href={footer.vimeoUrl} target="_blank" rel="noopener">
-              <span className="material-symbols-outlined text-base">smart_display</span>
-              Vimeo
-            </a>
-          )}
+              {footer.vimeoUrl && (
+                <a className="flex items-center gap-xs text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-all py-2" href={footer.vimeoUrl} target="_blank" rel="noopener">
+                  <Icon name="smart_display" className="text-base" />
+                  {t("footer_vimeo", "Vimeo")}
+                </a>
+              )}
         </div>
       </div>
     </footer>

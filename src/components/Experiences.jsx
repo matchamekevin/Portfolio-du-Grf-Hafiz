@@ -1,42 +1,48 @@
-import { useI18n } from "../i18n/I18nContext";
+import { useTranslations } from "../hooks/useTranslations.jsx";
 import { useSiteData } from "../contexts/SiteDataContext";
 import Reveal from "./Reveal";
+import Icon from "./Icon";
 
 const ACCENT = {
   primary: { text: "text-primary", hover: "group-hover:text-primary" },
   secondary: { text: "text-secondary", hover: "group-hover:text-secondary" }
 };
 
-function Entry({ item, accent }) {
-  const { t, tr } = useI18n();
+function Entry({ item, accent, index }) {
+  const { t, tr } = useTranslations();
   const A = ACCENT[accent];
-  const role = (item.role && !item.role.includes(" ")) ? t(item.role) : item.role;
+  const isOldKey = item.role && !item.role.includes(" ") && /^[a-z]\d+_?[a-z]?$/i.test(item.role);
+  const role = isOldKey ? tr(`db.experience.project${index + 1}.role`, t(item.role)) : (item.role || "");
+  const title = tr(`db.experience.project${index + 1}.title`, item.title);
+  const meta = tr(`db.experience.project${index + 1}.meta`, item.meta);
   return (
     <Reveal className="flex flex-col md:flex-row md:items-start md:gap-gutter justify-between p-md technical-border bg-surface-container-low/40 hover:bg-surface-container transition-all hover:border-primary/40 group">
       <div className="md:flex-1">
         <h4 className={`font-headline-md text-headline-md text-on-surface ${A.hover} transition-colors`}>
-          {item.title}
+          {title}
         </h4>
         <p className="font-body-md text-body-md text-on-surface-variant mt-1">{role}</p>
       </div>
       <span className={`font-label-md text-label-md text-right md:text-right ${A.text} mt-base md:mt-0 md:shrink-0 opacity-70 ${A.hover} group-hover:opacity-100 transition-opacity`}>
-        {item.meta}
+        {meta}
       </span>
     </Reveal>
   );
 }
 
 export default function Experiences() {
-  const { t, tr } = useI18n();
+  const { t, tr } = useTranslations();
   const { experiences = [], trajectoire } = useSiteData();
 
-  const cinema = experiences
-    .filter((e) => e.category === "cinema")
+  const all = experiences
+    .filter((e) => e.active)
     .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  const theatre = experiences
-    .filter((e) => e.category === "theatre")
-    .sort((a, b) => (a.order || 0) - (b.order || 0));
+  const indexMap = {};
+  all.forEach((e, i) => { indexMap[e.id] = i; });
+
+  const cinema = all.filter((e) => e.category === "cinema");
+  const theatre = all.filter((e) => e.category === "theatre");
 
   const danteItems = trajectoire?.danteItems || [];
   const languages = trajectoire?.languages || [];
@@ -54,16 +60,16 @@ export default function Experiences() {
             </div>
             <div className="mt-md space-y-md">
               <div className="technical-border p-md bg-surface-container-low/80 hover:bg-surface-container-high transition-all hover:border-tertiary/40 group">
-                <span className="material-symbols-outlined text-tertiary mb-base group-hover:scale-110 transition-transform">verified</span>
-                <p className="font-body-md text-body-md text-on-surface">{trajectoire?.danteSubtitle || t("dante_t")}</p>
-                <p className="font-label-sm text-label-sm text-on-surface-variant">{trajectoire?.danteTitle || t("dante_s")}</p>
+                <Icon name="verified" className="text-tertiary mb-base group-hover:scale-110 transition-transform" />
+                <p className="font-body-md text-body-md text-on-surface">{tr("db.trajectoire.danteSubtitle", trajectoire?.danteSubtitle || t("dante_t"))}</p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">{tr("db.trajectoire.danteTitle", trajectoire?.danteTitle || t("dante_s"))}</p>
               </div>
               <div className="technical-border p-md bg-surface-container-low/80">
-                <span className="material-symbols-outlined text-secondary mb-base">language</span>
+                <Icon name="language" className="text-secondary mb-base" />
                 <p className="font-label-md text-label-md text-on-surface-variant uppercase mb-xs">{t("lang_t")}</p>
                 <ul className="font-body-md text-body-md text-on-surface space-y-1 list-disc list-inside pl-1">
-                  {languages.map((lang) => (
-                    <li key={lang}>{lang}</li>
+                  {languages.map((lang, i) => (
+                    <li key={i}>{tr(`db.trajectoire.language${i + 1}`, lang)}</li>
                   ))}
                 </ul>
               </div>
@@ -78,7 +84,7 @@ export default function Experiences() {
               </div>
               <div className="space-y-sm">
                 {cinema.map((item) => (
-                  <Entry key={item.id} item={item} accent="primary" />
+                  <Entry key={item.id} item={item} accent="primary" index={indexMap[item.id] ?? 0} />
                 ))}
               </div>
             </div>
@@ -90,7 +96,7 @@ export default function Experiences() {
               </div>
               <div className="space-y-sm">
                 {theatre.map((item) => (
-                  <Entry key={item.id} item={item} accent="secondary" />
+                  <Entry key={item.id} item={item} accent="secondary" index={indexMap[item.id] ?? 0} />
                 ))}
               </div>
             </div>

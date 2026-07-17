@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { api } from "../services/api";
 import Field from "../components/admin/Field";
 import { useToast } from "../components/admin/Toast";
+import AdminIcon from "../components/admin/AdminIcon";
 
 function decodeHtml(html) {
   const el = document.createElement("textarea");
@@ -250,8 +251,8 @@ export default function AdminHero() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-admin-surface/50 border-b border-admin-border/40">
                   <span className="flex items-center justify-center w-6 h-6 rounded-full bg-admin-accent/10 text-admin-accent text-xs font-bold">{i + 1}</span>
                   <span className="text-xs font-medium text-admin-muted uppercase tracking-wide truncate">{tag.l || "Sans catégorie"}</span>
-                  <button type="button" onClick={() => removeTag(i)} className="ml-auto text-admin-muted hover:text-red-500 transition-colors p-1 rounded-lg hover:bg-red-500/10" title="Supprimer">
-                    <span className="material-symbols-outlined text-base">close</span>
+                   <button type="button" onClick={() => removeTag(i)} className="ml-auto text-admin-muted hover:text-red-500 transition-colors p-1 rounded-lg hover:bg-red-500/10" title="Supprimer">
+                     <AdminIcon name="close" className="text-base" />
                   </button>
                 </div>
                 <div className="p-4 space-y-3">
@@ -273,9 +274,9 @@ export default function AdminHero() {
                       />
                     </Field>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-admin-muted">
-                    <span className="material-symbols-outlined text-sm">link</span>
-                    <span>Lien optionnel</span>
+                   <div className="flex items-center gap-2 text-xs text-admin-muted">
+                     <AdminIcon name="link" className="text-sm" />
+                     <span>Lien optionnel</span>
                     {hasLink && <span className="w-1.5 h-1.5 rounded-full bg-green-500" />}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

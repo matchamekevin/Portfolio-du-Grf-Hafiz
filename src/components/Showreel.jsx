@@ -1,10 +1,11 @@
-import { useI18n } from "../i18n/I18nContext";
+import { useTranslations } from "../hooks/useTranslations.jsx";
 import { useSiteData } from "../contexts/SiteDataContext";
 import CloudinaryImg from "./admin/CloudinaryImg";
 import Reveal from "./Reveal";
+import Icon from "./Icon";
 
 export default function Showreel() {
-  const { t } = useI18n();
+  const { t, tr } = useTranslations();
   const { showreel = [] } = useSiteData();
 
   const projects = showreel
@@ -26,7 +27,7 @@ export default function Showreel() {
           </p>
         </Reveal>
         <div className="flex flex-wrap justify-center gap-md">
-          {projects.map((p) => (
+          {projects.map((p, index) => (
             <Reveal key={p.id} className={`${p.delay || ""} w-full md:w-[calc(50%_-_12px)]`}>
               <a
                 className="group relative technical-border bg-surface-container/40 overflow-hidden cursor-pointer block"
@@ -44,23 +45,19 @@ export default function Showreel() {
                     />
                   ) : (
                     <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                      <span className="material-symbols-outlined text-6xl text-on-surface-variant/30">play_circle</span>
+                      <Icon name="play_circle" className="text-6xl text-on-surface-variant/30" />
                     </div>
                   )}
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="material-symbols-outlined text-display-lg text-primary scale-90 group-hover:scale-100 transition-transform duration-300">
-                      play_circle
-                    </span>
+                    <Icon name="play_circle" className="text-display-lg text-primary scale-90 group-hover:scale-100 transition-transform duration-300" />
                   </div>
                 </div>
                 <div className="p-md flex justify-between items-center border-t border-outline-variant/30">
                   <div>
-                    <h3 className="font-headline-md text-headline-md text-on-surface truncate">{p.title}</h3>
+                    <h3 className="font-headline-md text-headline-md text-on-surface truncate">{tr(`db.showreel.project${index + 1}.title`, p.title)}</h3>
                     <p className="font-label-md text-label-md text-on-surface-variant">{p.subKey ? t(p.subKey) : ""}</p>
                   </div>
-                  <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-all group-hover:translate-x-1 group-hover:-translate-y-1">
-                    arrow_outward
-                  </span>
+                  <Icon name="arrow_outward" className="text-on-surface-variant group-hover:text-primary transition-all group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </div>
               </a>
             </Reveal>

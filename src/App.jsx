@@ -4,6 +4,8 @@ import { useAuth } from "./contexts/AuthContext";
 import { SiteDataProvider } from "./contexts/SiteDataContext";
 import { AdminThemeProvider } from "./contexts/AdminThemeContext";
 import { ToastProvider } from "./components/admin/Toast";
+import { AdminTranslationsProvider } from "./hooks/useAdminTranslations.jsx";
+import ScrollRestoration from "./components/ScrollRestoration.jsx";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Showreel from "./components/Showreel";
@@ -33,6 +35,7 @@ function PublicLayout() {
         <Contact />
       </main>
       <Footer />
+      <ScrollRestoration />
     </>
   );
 }
@@ -44,23 +47,6 @@ function ProtectedRoute({ children }) {
 }
 
 export default function App() {
-  useEffect(() => {
-    let done = false;
-    const mark = () => {
-      if (done) return;
-      done = true;
-      document.documentElement.classList.add("icons-ready");
-    };
-    if (document.fonts && document.fonts.load) {
-      document.fonts.load("1em 'Material Symbols Outlined'").then(mark).catch(mark);
-      document.fonts.ready.then(mark);
-    } else {
-      mark();
-    }
-    const t = setTimeout(mark, 2000);
-    return () => clearTimeout(t);
-  }, []);
-
   return (
     <Routes>
       <Route path="/" element={<SiteDataProvider><PublicLayout /></SiteDataProvider>} />
@@ -69,13 +55,15 @@ export default function App() {
         path="/admin"
         element={
           <ProtectedRoute>
-            <AdminThemeProvider>
-              <ToastProvider>
-                <Suspense fallback={null}>
-                  <Admin />
-                </Suspense>
-              </ToastProvider>
-            </AdminThemeProvider>
+            <AdminTranslationsProvider>
+              <AdminThemeProvider>
+                <ToastProvider>
+                  <Suspense fallback={null}>
+                    <Admin />
+                  </Suspense>
+                </ToastProvider>
+              </AdminThemeProvider>
+            </AdminTranslationsProvider>
           </ProtectedRoute>
         }
       />

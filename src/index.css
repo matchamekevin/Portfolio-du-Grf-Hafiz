@@ -95,29 +95,7 @@ html.light {
   }
   .lang-item:hover { background-color: rgb(var(--surface-container-high)); color: rgb(var(--glow)); }
   .lang-item.active { color: rgb(var(--glow)); }
-  .lang-item .material-symbols-outlined { font-size: 16px; opacity: 0; }
-  .lang-item.active .material-symbols-outlined { opacity: 1; }
 }
-
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-  font-variation-settings: 'fill' 0, 'wght' 400;
-  visibility: hidden;
-}
-
-html.icons-ready .material-symbols-outlined { visibility: visible; }
 
 @layer utilities {
   .led-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }

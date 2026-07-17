@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
 import { useAdminTheme } from "../../contexts/AdminThemeContext";
+import AdminIcon from "./AdminIcon";
 
 export default function Modal({ open, onClose, title, children }) {
   const { mode } = useAdminTheme();
@@ -32,7 +33,7 @@ export default function Modal({ open, onClose, title, children }) {
             onClick={onClose}
             className="w-11 h-11 flex items-center justify-center rounded-lg text-admin-muted hover:text-admin-text hover:bg-admin-bg/60 transition-colors"
           >
-            <span className="material-symbols-outlined text-base">close</span>
+            <AdminIcon name="close" className="text-base" />
           </button>
         </div>
         <div className="flex-1 overflow-y-auto px-5 py-1">

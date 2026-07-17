@@ -1,10 +1,10 @@
-import { useI18n } from "../i18n/I18nContext";
+import { useTranslations } from "../hooks/useTranslations.jsx";
 import { useSiteData } from "../contexts/SiteDataContext";
 import CloudinaryImg from "./admin/CloudinaryImg";
 import Reveal from "./Reveal";
 
 export default function Gallery() {
-  const { t } = useI18n();
+  const { t, tr } = useTranslations();
   const { gallery = [] } = useSiteData();
 
   const shots = gallery
@@ -26,12 +26,12 @@ export default function Gallery() {
           </p>
         </Reveal>
         <div className="columns-1 md:columns-2 gap-md [column-fill:balance] [&>*]:break-inside-avoid [&>*]:mb-md">
-          {shots.map((shot) => (
+          {shots.map((shot, i) => (
             <Reveal key={shot.id}>
               <figure className="group technical-border bg-surface-container/40 overflow-hidden">
                 <CloudinaryImg
                   src={shot.src}
-                  alt={shot.alt}
+                  alt={tr(`db.gallery.shot${i + 1}.alt`, shot.alt)}
                   w={800}
                   className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
                 />

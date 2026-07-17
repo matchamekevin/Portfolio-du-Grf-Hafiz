@@ -1,19 +1,22 @@
 import { lazy, Suspense } from "react";
 import { useSiteData } from "../contexts/SiteDataContext";
-import { useI18n } from "../i18n/I18nContext";
+import { useTranslations } from "../hooks/useTranslations.jsx";
 
 const ThreeScene = lazy(() => import("./ThreeScene"));
 
 export default function Hero() {
   const { hero, contact } = useSiteData();
-  const { t, tr } = useI18n();
+  const { t, tr } = useTranslations();
 
-  const status = hero?.status || t("hero_status");
-  const title = hero?.title || t("hero_title");
-  const subtitle = hero?.subtitle || t("hero_sub");
-  const badge = hero?.badge || t("hero_badge");
-  const availability = contact?.availability || t("hero_status");
-  const location = contact?.location || "Lome, Togo";
+  const status = tr("db.hero.status", hero?.status || t("hero_status"));
+  const title = tr("db.hero.title", hero?.title || t("hero_title"));
+  const subtitle = tr("db.hero.subtitle", hero?.subtitle || t("hero_sub"));
+  const badge = tr("db.hero.badge", hero?.badge || t("hero_badge"));
+  const rawAvailability = contact?.availability || "";
+  const rawLocation = contact?.location || "";
+  const availability = tr("db.contact.availability", rawAvailability || t("c_avail1"));
+  const location = tr("db.contact.location", rawLocation);
+  const showLocation = rawLocation.trim().length > 0;
 
   const tags = Array.isArray(hero?.tags) && hero.tags.length > 0
     ? hero.tags
@@ -25,7 +28,9 @@ export default function Hero() {
         <div className="md:col-span-8 animate-fade-in-up">
           <div className="flex items-center gap-base mb-md">
             <span className="font-label-md text-label-md text-tertiary uppercase tracking-widest">{t("c_avail")} :</span>
-            <span className="font-label-md text-label-md text-on-surface-variant">{availability} · {location}</span>
+            <span className="font-label-md text-label-md text-on-surface-variant">
+              {showLocation ? `${availability} · ${location}` : availability}
+            </span>
           </div>
           <h1
             className="font-display-lg text-3xl sm:text-5xl md:text-display-lg text-on-surface mb-md break-words"
@@ -36,30 +41,30 @@ export default function Hero() {
             dangerouslySetInnerHTML={{ __html: subtitle }}
           />
           <div className="flex flex-wrap gap-xs sm:gap-base delay-200 opacity-0 animate-fade-in-up">
-            {tags.map((tag, i) => {
-              const label = tag.l || String(i + 1).padStart(2, "0");
-              return (
-                <div
-                  key={i}
-                  className="px-sm sm:px-md py-xs sm:py-sm technical-border bg-surface-container/50 hover:bg-surface-container-high transition-colors hover:border-primary/50 group min-w-0"
-                >
-                  <span className="font-label-sm text-label-sm text-on-surface-variant block mb-1 uppercase group-hover:text-primary transition-colors">
-                    {label}
-                  </span>
-                    <span className="font-body-md text-body-md text-on-surface break-words">
-                    {Array.isArray(tag.v)
-                      ? tag.v.map((part, j) =>
-                          typeof part === "string" ? (
-                            part
-                          ) : (
-                            <a key={j} href={part.href} className="text-primary hover:underline">{part.text}</a>
+              {tags.map((tag, i) => {
+                const label = tag.l ? t(tag.l) : String(i + 1).padStart(2, "0");
+                return (
+                  <div
+                    key={i}
+                    className="px-sm sm:px-md py-xs sm:py-sm technical-border bg-surface-container/50 hover:bg-surface-container-high transition-colors hover:border-primary/50 group min-w-0"
+                  >
+                    <span className="font-label-sm text-label-sm text-on-surface-variant block mb-1 uppercase group-hover:text-primary transition-colors">
+                      {label}
+                    </span>
+                      <span className="font-body-md text-body-md text-on-surface break-words">
+                      {Array.isArray(tag.v)
+                        ? tag.v.map((part, j) =>
+                            typeof part === "string" ? (
+                              tr(`db.hero.tag${i + 1}.v.${j}`, part)
+                            ) : (
+                              <a key={j} href={part.href} className="text-primary hover:underline">{tr(`db.hero.tag${i + 1}.v.${j}`, part.text)}</a>
+                            )
                           )
-                        )
-                      : tag.v}
-                  </span>
-                </div>
-              );
-            })}
+                        : tr(`db.hero.tag${i + 1}.v`, tag.v)}
+                    </span>
+                  </div>
+                );
+              })}
           </div>
         </div>
         <div className="md:col-span-4 hidden md:block opacity-0 animate-fade-in-up delay-300">

@@ -1,13 +1,35 @@
 import prisma from "../config/prisma.js";
 import { translateDeepL } from "../controllers/realtimeController.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const UI_SEED_FILE = path.resolve(__dirname, "../../../seed-ui-fr.json");
+
+let uiStringsCache = null;
+function getUiStrings() {
+  if (uiStringsCache) return uiStringsCache;
+  try {
+    const raw = fs.readFileSync(UI_SEED_FILE, "utf-8");
+    uiStringsCache = JSON.parse(raw);
+  } catch {
+    uiStringsCache = {};
+  }
+  return uiStringsCache;
+}
 
 export async function extractDbContent() {
-  const [hero, cta, contact, footer, trajectoire] = await Promise.all([
+  const [hero, cta, contact, footer, trajectoire, showreel, experiences, gallery, skills] = await Promise.all([
     prisma.hero.findFirst(),
     prisma.cta.findFirst(),
     prisma.contactInfo.findFirst(),
     prisma.footer.findFirst(),
     prisma.trajectoire.findFirst(),
+    prisma.showreelProject.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+    prisma.experience.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+    prisma.galleryShot.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+    prisma.skillSection.findMany({ orderBy: { order: "asc" } }),
   ]);
 
   const entries = [];
@@ -20,6 +42,17 @@ export async function extractDbContent() {
     if (Array.isArray(hero.tags)) {
       hero.tags.forEach((tag, i) => {
         if (tag.l) entries.push({ key: `db.hero.tag${i + 1}.l`, value: tag.l });
+        if (typeof tag.v === "string" && tag.v) {
+          entries.push({ key: `db.hero.tag${i + 1}.v`, value: tag.v });
+        } else if (Array.isArray(tag.v)) {
+          tag.v.forEach((part, j) => {
+            if (typeof part === "string" && part) {
+              entries.push({ key: `db.hero.tag${i + 1}.v.${j}`, value: part });
+            } else if (part && typeof part === "object" && part.text) {
+              entries.push({ key: `db.hero.tag${i + 1}.v.${j}`, value: part.text });
+            }
+          });
+        }
       });
     }
   }
@@ -45,6 +78,48 @@ export async function extractDbContent() {
   if (trajectoire) {
     if (trajectoire.danteTitle) entries.push({ key: "db.trajectoire.danteTitle", value: trajectoire.danteTitle });
     if (trajectoire.danteSubtitle) entries.push({ key: "db.trajectoire.danteSubtitle", value: trajectoire.danteSubtitle });
+    if (Array.isArray(trajectoire.danteItems)) {
+      trajectoire.danteItems.forEach((item, i) => {
+        if (item) entries.push({ key: `db.trajectoire.danteItem${i + 1}`, value: String(item) });
+      });
+    }
+    if (Array.isArray(trajectoire.languages)) {
+      trajectoire.languages.forEach((lang, i) => {
+        if (lang) entries.push({ key: `db.trajectoire.language${i + 1}`, value: String(lang) });
+      });
+    }
+  }
+
+  if (Array.isArray(showreel)) {
+    showreel.forEach((p, i) => {
+      if (p.title) entries.push({ key: `db.showreel.project${i + 1}.title`, value: p.title });
+    });
+  }
+
+  if (Array.isArray(experiences)) {
+    experiences.forEach((exp, i) => {
+      if (exp.title) entries.push({ key: `db.experience.project${i + 1}.title`, value: exp.title });
+      if (exp.role) entries.push({ key: `db.experience.project${i + 1}.role`, value: exp.role });
+      if (exp.meta) entries.push({ key: `db.experience.project${i + 1}.meta`, value: exp.meta });
+    });
+  }
+
+  if (Array.isArray(gallery)) {
+    gallery.forEach((shot, i) => {
+      if (shot.alt) entries.push({ key: `db.gallery.shot${i + 1}.alt`, value: shot.alt });
+    });
+  }
+
+  if (Array.isArray(skills)) {
+    skills.forEach((section, i) => {
+      if (section.section) entries.push({ key: `db.skills.section${i + 1}.section`, value: section.section });
+      if (section.title) entries.push({ key: `db.skills.section${i + 1}.title`, value: section.title });
+      if (Array.isArray(section.items)) {
+        section.items.forEach((item, j) => {
+          if (item) entries.push({ key: `db.skills.section${i + 1}.item${j + 1}`, value: String(item) });
+        });
+      }
+    });
   }
 
   return entries;
@@ -52,62 +127,45 @@ export async function extractDbContent() {
 
 /**
  * Sync DB content into Translation table for all languages.
- * - FR: always update to match current DB value (source='db')
- * - Other languages: only create if missing (never overwrite manual edits)
- * Uses a single raw SQL batch for speed on remote DB.
+ * Cleans old db.* translations first, then rewrites FR from DB
+ * and generates EN/DE/ES/PT via DeepL when missing.
  */
 export async function syncDbTranslations() {
   const dbEntries = await extractDbContent();
+  const uiStrings = getUiStrings();
+  const uiEntries = Object.entries(uiStrings).map(([key, value]) => ({ key, value }));
+  const allEntries = [...dbEntries, ...uiEntries];
   const languages = ["fr", "en", "de", "es", "pt"];
 
-  const allRows = [];
-  for (const entry of dbEntries) {
-    for (const lang of languages) {
-      allRows.push({ key: entry.key, language: lang, value: entry.value });
-    }
-  }
+  const allKeys = allEntries.map((e) => e.key);
 
-  if (allRows.length === 0) return { total: 0 };
-
-  // 1. Get existing db.* translations in one query
-  const existing = await prisma.translation.findMany({
-    where: { key: { startsWith: "db." } },
-    select: { key: true, language: true },
-  });
-  const existingSet = new Set(existing.map((e) => `${e.key}::${e.language}`));
-
-  // 2. Partition: FR rows vs non-FR rows
-  const frRows = allRows.filter((r) => r.language === "fr");
-  const nonFrRows = allRows.filter((r) => r.language !== "fr");
-
-  // 3. Upsert FR rows (always update to match DB)
-  for (const row of frRows) {
-    await prisma.translation.upsert({
-      where: { key_language: { key: row.key, language: row.language } },
-      create: { key: row.key, language: row.language, value: row.value, source: "db" },
-      update: { value: row.value, source: "db", updatedAt: new Date() },
+  if (allKeys.length > 0) {
+    await prisma.translation.deleteMany({
+      where: {
+        key: { in: allKeys },
+      },
     });
   }
 
-  // 4. Insert only missing non-FR rows, translating from FR with DeepL
-  const toCreate = nonFrRows.filter((r) => !existingSet.has(`${r.key}::${r.language}`));
-  if (toCreate.length > 0) {
-    const data = await Promise.all(
-      toCreate.map(async (r) => {
-        let value = r.value;
-        if (r.language !== "fr") {
-          try {
-            const translated = await translateDeepL(r.value, "fr", r.language);
-            if (translated && translated !== r.value) value = translated;
-          } catch {
-            value = r.value;
-          }
+  const data = [];
+  for (const entry of allEntries) {
+    for (const lang of languages) {
+      let value = entry.value;
+      if (lang !== "fr") {
+        try {
+          const translated = await translateDeepL(entry.value, "fr", lang);
+          if (translated && translated !== entry.value) value = translated;
+        } catch {
+          value = entry.value;
         }
-        return { key: r.key, language: r.language, value, source: "db" };
-      })
-    );
+      }
+      data.push({ key: entry.key, language: lang, value, source: "db" });
+    }
+  }
+
+  if (data.length > 0) {
     await prisma.translation.createMany({ data, skipDuplicates: true });
   }
 
-  return { total: allRows.length, created: toCreate.length };
+  return { total: data.length, created: data.length };
 }

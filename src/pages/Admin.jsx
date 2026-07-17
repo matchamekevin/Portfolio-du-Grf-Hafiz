@@ -4,12 +4,13 @@ import { compressImage } from "../utils/compressImage";
 import { useAuth } from "../contexts/AuthContext";
 import { useAdminTheme } from "../contexts/AdminThemeContext";
 import { useRealtime } from "../contexts/RealtimeContext";
-import { useI18n } from "../i18n/I18nContext";
+import { useAdminTranslations } from "../hooks/useAdminTranslations.jsx";
 import { useToast } from "../components/admin/Toast";
 import CloudinaryImg from "../components/admin/CloudinaryImg";
 import AdminLayout from "../components/admin/AdminLayout";
 import Modal from "../components/admin/Modal";
 import Field from "../components/admin/Field";
+import AdminIcon from "../components/admin/AdminIcon";
 import AdminHero from "./AdminHero";
 
 const TABS = [
@@ -115,7 +116,7 @@ function AdminShowreel({ refreshKey }) {
           <p className="text-sm text-admin-muted mt-1">{items.length} projet{items.length !== 1 ? "s" : ""}</p>
         </div>
         <button onClick={openCreate} className="admin-btn admin-btn-primary">
-          <span className="material-symbols-outlined text-base mr-1">add</span>Nouveau projet
+          <AdminIcon name="add" className="text-base mr-1" />Nouveau projet
         </button>
       </div>
       {error && <ErrorMessage message={error} />}
@@ -126,10 +127,10 @@ function AdminShowreel({ refreshKey }) {
               {item.imageUrl ? (
                 <CloudinaryImg src={item.imageUrl} alt={item.title} w={400} className="w-full h-full object-cover" />
               ) : (
-                <div className="flex items-center gap-3 text-admin-muted">
-                  <span className="material-symbols-outlined text-4xl">image</span>
-                  <span className="text-xs">Pas d'image</span>
-                </div>
+                 <div className="flex items-center gap-3 text-admin-muted">
+                   <AdminIcon name="image" className="text-4xl" />
+                   <span className="text-xs">Pas d'image</span>
+                 </div>
               )}
               <div className="absolute top-2 left-2 flex items-center gap-1.5">
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-admin-accent/20 text-admin-accent">
@@ -146,19 +147,19 @@ function AdminShowreel({ refreshKey }) {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-admin-text truncate">{item.title}</h3>
-                  <p className="text-xs text-admin-muted mt-1 truncate flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">open_in_new</span>
-                    {item.href ? (() => { try { return new URL(item.href).hostname.replace("www.", ""); } catch { return item.href; } })() : "—"}
-                  </p>
-                </div>
-                <div className="flex gap-2 shrink-0">
-                  <button onClick={() => openEdit(item)} className="admin-btn admin-btn-secondary text-sm px-3 py-2 min-h-[44px]">
-                    <span className="material-symbols-outlined text-base">edit</span>
-                  </button>
-                  <button onClick={() => handleDelete(item.id)} className="admin-btn admin-btn-danger text-sm px-3 py-2 min-h-[44px]">
-                    <span className="material-symbols-outlined text-base">delete</span>
-                  </button>
-                </div>
+                   <p className="text-xs text-admin-muted mt-1 truncate flex items-center gap-1">
+                     <AdminIcon name="open_in_new" className="text-sm" />
+                     {item.href ? (() => { try { return new URL(item.href).hostname.replace("www.", ""); } catch { return item.href; } })() : "—"}
+                   </p>
+                 </div>
+                 <div className="flex gap-2 shrink-0">
+                   <button onClick={() => openEdit(item)} className="admin-btn admin-btn-secondary text-sm px-3 py-2 min-h-[44px]">
+                     <AdminIcon name="edit" className="text-base" />
+                   </button>
+                   <button onClick={() => handleDelete(item.id)} className="admin-btn admin-btn-danger text-sm px-3 py-2 min-h-[44px]">
+                     <AdminIcon name="delete" className="text-base" />
+                   </button>
+                 </div>
               </div>
             </div>
           </div>
@@ -180,12 +181,12 @@ function AdminShowreel({ refreshKey }) {
               <div className="relative rounded-lg overflow-hidden border border-admin-border/60">
                 <CloudinaryImg src={form.imageUrl} alt="Aperçu" w={600} className="w-full h-36 object-cover" />
                 <button type="button" onClick={() => setForm({ ...form, imageUrl: "" })} className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors">
-                  <span className="material-symbols-outlined text-sm">close</span>
+                  <AdminIcon name="close" className="text-sm" />
                 </button>
               </div>
             ) : (
               <label className="flex flex-col items-center gap-2 p-4 border-2 border-dashed border-admin-border/60 rounded-lg cursor-pointer hover:border-admin-accent/40 transition-colors">
-                <span className="material-symbols-outlined text-3xl text-admin-muted">cloud_upload</span>
+                <AdminIcon name="cloud_upload" className="text-3xl text-admin-muted" />
                 <span className="text-sm text-admin-muted">{uploading ? "Upload…" : "Glissez ou cliquez pour ajouter"}</span>
                 <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
               </label>
@@ -205,7 +206,7 @@ function AdminShowreel({ refreshKey }) {
           <div className="flex justify-end gap-2 pt-2 border-t border-admin-border/60">
             <button type="button" onClick={() => setOpen(false)} className="admin-btn admin-btn-secondary">Annuler</button>
             <button type="submit" className="admin-btn admin-btn-primary">
-              <span className="material-symbols-outlined text-base mr-1">save</span>{editing ? "Mettre à jour" : "Créer"}
+              <AdminIcon name="save" className="text-base mr-1" />{editing ? "Mettre à jour" : "Créer"}
             </button>
           </div>
         </form>
@@ -337,7 +338,7 @@ function AdminExperiences({ refreshKey }) {
           <div className="flex justify-end gap-2 pt-2 border-t border-admin-border/60">
             <button type="button" onClick={() => setOpen(false)} className="admin-btn admin-btn-secondary">Annuler</button>
             <button type="submit" className="admin-btn admin-btn-primary">
-              <span className="material-symbols-outlined text-base mr-1">save</span>{editing ? "Mettre à jour" : "Créer"}
+              <AdminIcon name="save" className="text-base mr-1" />{editing ? "Mettre à jour" : "Créer"}
             </button>
           </div>
         </form>
@@ -409,7 +410,7 @@ function AdminGallery({ refreshKey }) {
           <p className="text-sm text-admin-muted mt-1">{items.length} photo{items.length !== 1 ? "s" : ""}</p>
         </div>
         <button onClick={openCreate} className="admin-btn admin-btn-primary">
-          <span className="material-symbols-outlined text-base mr-1">add</span>Ajouter une photo
+          <AdminIcon name="add" className="text-base mr-1" />Ajouter une photo
         </button>
       </div>
 
@@ -421,14 +422,14 @@ function AdminGallery({ refreshKey }) {
               <CloudinaryImg src={item.src} alt={item.alt} w={300} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
                 <span className="text-xs text-white/80 truncate">{item.alt}</span>
-                <div className="flex gap-1.5">
-                  <button onClick={() => openEdit(item)} className="p-2 rounded bg-white/20 hover:bg-white/30 text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
-                    <span className="material-symbols-outlined text-base">edit</span>
-                  </button>
-                  <button onClick={() => handleDelete(item.id)} className="p-2 rounded bg-red-500/40 hover:bg-red-500/60 text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
-                    <span className="material-symbols-outlined text-base">delete</span>
-                  </button>
-                </div>
+                 <div className="flex gap-1.5">
+                   <button onClick={() => openEdit(item)} className="p-2 rounded bg-white/20 hover:bg-white/30 text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
+                     <AdminIcon name="edit" className="text-base" />
+                   </button>
+                   <button onClick={() => handleDelete(item.id)} className="p-2 rounded bg-red-500/40 hover:bg-red-500/60 text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
+                     <AdminIcon name="delete" className="text-base" />
+                   </button>
+                 </div>
               </div>
               {!item.active && (
                 <div className="absolute top-2 right-2">
@@ -440,26 +441,26 @@ function AdminGallery({ refreshKey }) {
         ))}
       </div>
       <Modal open={open} onClose={() => setOpen(false)} title={editing ? "Modifier la photo" : "Nouvelle photo"}>
-        <form onSubmit={handleSubmit} className="space-y-3">
-          {form.src ? (
-            <div className="relative rounded-lg overflow-hidden border border-admin-border/60">
-              <CloudinaryImg src={form.src} alt="Aperçu" w={600} className="w-full h-48 object-cover" />
-              <button type="button" onClick={() => setForm({ ...form, src: "" })} className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors">
-                <span className="material-symbols-outlined text-sm">close</span>
-              </button>
-            </div>
-          ) : (
-            <div
+         <form onSubmit={handleSubmit} className="space-y-3">
+           {form.src ? (
+             <div className="relative rounded-lg overflow-hidden border border-admin-border/60">
+               <CloudinaryImg src={form.src} alt="Aperçu" w={600} className="w-full h-48 object-cover" />
+               <button type="button" onClick={() => setForm({ ...form, src: "" })} className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors">
+                 <AdminIcon name="close" className="text-sm" />
+               </button>
+             </div>
+           ) : (
+             <div
               className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${dragOver ? "border-admin-accent" : "border-admin-border/60 hover:border-admin-accent/40"}`}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) doUpload(f); }}
               onClick={() => document.getElementById("gallery-modal-input").click()}
-            >
-              <input id="gallery-modal-input" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-              <span className="material-symbols-outlined text-3xl text-admin-muted">cloud_upload</span>
-              <p className="text-sm text-admin-muted mt-2">Glissez ou cliquez</p>
-            </div>
+             >
+               <input id="gallery-modal-input" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+               <AdminIcon name="cloud_upload" className="text-3xl text-admin-muted" />
+               <p className="text-sm text-admin-muted mt-2">Glissez ou cliquez</p>
+             </div>
           )}
           <Field label="Description (alt)" hint="Texte pour l'accessibilité">
             <input className="admin-input" value={form.alt} onChange={(e) => setForm({ ...form, alt: e.target.value })} placeholder="Description de l'image" required />
@@ -477,8 +478,8 @@ function AdminGallery({ refreshKey }) {
           </div>
           <div className="flex justify-end gap-2 pt-2 border-t border-admin-border/60">
             <button type="button" onClick={() => setOpen(false)} className="admin-btn admin-btn-secondary">Annuler</button>
-            <button type="submit" className="admin-btn admin-btn-primary" disabled={!form.src}>
-              <span className="material-symbols-outlined text-base mr-1">save</span>{editing ? "Mettre à jour" : "Créer"}
+            <button type="submit" className="admin-btn admin-btn-primary">
+              <AdminIcon name="save" className="text-base mr-1" />{editing ? "Mettre à jour" : "Créer"}
             </button>
           </div>
         </form>
@@ -489,7 +490,7 @@ function AdminGallery({ refreshKey }) {
 
 function AdminSkills({ refreshKey }) {
   const { data: items = [], error, refresh } = useAdminData(api.skills.listAll, [], [refreshKey]);
-  const { t } = useI18n();
+  const { t } = useAdminTranslations();
   const toast = useToast();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -629,7 +630,7 @@ function AdminSkills({ refreshKey }) {
           <div className="flex justify-end gap-2 pt-2 border-t border-admin-border/60">
             <button type="button" onClick={() => setOpen(false)} className="admin-btn admin-btn-secondary">Annuler</button>
             <button type="submit" className="admin-btn admin-btn-primary">
-              <span className="material-symbols-outlined text-base mr-1">save</span>{editing ? "Mettre a jour" : "Creer"}
+              <AdminIcon name="save" className="text-base mr-1" />{editing ? "Mettre a jour" : "Creer"}
             </button>
           </div>
         </form>
@@ -677,7 +678,7 @@ function AdminTrajectoire() {
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-admin-text">Trajectoire professionnelle</h2>
         <button type="submit" className="admin-btn admin-btn-primary" disabled={saving || !data}>
-          <span className="material-symbols-outlined text-base mr-1">save</span>{saving ? "Sauvegarde..." : "Sauvegarder"}
+          <AdminIcon name="save" className="text-base mr-1" />{saving ? "Sauvegarde..." : "Sauvegarder"}
         </button>
       </div>
 
@@ -741,7 +742,7 @@ function AdminCTA() {
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-admin-text">Boutons d'action</h2>
         <button type="submit" className="admin-btn admin-btn-primary" disabled={saving || !data}>
-          <span className="material-symbols-outlined text-base mr-1">save</span>{saving ? "Sauvegarde..." : "Sauvegarder"}
+          <AdminIcon name="save" className="text-base mr-1" />{saving ? "Sauvegarde..." : "Sauvegarder"}
         </button>
       </div>
 
@@ -839,7 +840,7 @@ function AdminProfile() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-full bg-admin-accent/10 border border-admin-accent/30 flex items-center justify-center">
-          <span className="material-symbols-outlined text-xl text-admin-accent">person</span>
+          <AdminIcon name="person" className="text-xl text-admin-accent" />
         </div>
         <div>
           <h2 className="text-xl font-semibold text-admin-text">Mon profil</h2>
@@ -857,11 +858,11 @@ function AdminProfile() {
             <input className="admin-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </Field>
         </div>
-        <div className="flex justify-end pt-2 border-t border-admin-border/60">
-          <button type="submit" className="admin-btn admin-btn-primary" disabled={savingProfile}>
-            <span className="material-symbols-outlined text-base mr-1">{savingProfile ? "hourglass_empty" : "save"}</span>{savingProfile ? "Sauvegarde..." : "Sauvegarder"}
-          </button>
-        </div>
+         <div className="flex justify-end pt-2 border-t border-admin-border/60">
+           <button type="submit" className="admin-btn admin-btn-primary" disabled={savingProfile}>
+             <AdminIcon name={savingProfile ? "hourglass_empty" : "save"} className="text-base mr-1" />{savingProfile ? "Sauvegarde..." : "Sauvegarder"}
+           </button>
+         </div>
       </form>
 
       <form onSubmit={resetMode ? handleResetPassword : handlePassword} className="admin-card p-6 space-y-4">
@@ -880,19 +881,19 @@ function AdminProfile() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Mot de passe actuel">
-              <div className="relative">
-                <input className="admin-input pr-10" type={showCurrent ? "text" : "password"} value={currentPwd} onChange={(e) => setCurrentPwd(e.target.value)} required autoComplete="current-password" />
-                <button type="button" onClick={() => setShowCurrent((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded text-admin-muted hover:text-admin-text transition-colors" tabIndex={-1}>
-                  <span className="material-symbols-outlined text-lg">{showCurrent ? "visibility_off" : "visibility"}</span>
-                </button>
-              </div>
+               <div className="relative">
+                 <input className="admin-input pr-10" type={showCurrent ? "text" : "password"} value={currentPwd} onChange={(e) => setCurrentPwd(e.target.value)} required autoComplete="current-password" />
+                 <button type="button" onClick={() => setShowCurrent((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded text-admin-muted hover:text-admin-text transition-colors" tabIndex={-1}>
+                   <AdminIcon name={showCurrent ? "visibility_off" : "visibility"} className="text-lg" />
+                 </button>
+               </div>
             </Field>
             <div />
             <Field label="Nouveau mot de passe" hint="Minimum 6 caracteres">
               <div className="relative">
                 <input className="admin-input pr-10" type={showNew ? "text" : "password"} value={newPwd} onChange={(e) => setNewPwd(e.target.value)} required minLength={6} autoComplete="new-password" />
                 <button type="button" onClick={() => setShowNew((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded text-admin-muted hover:text-admin-text transition-colors" tabIndex={-1}>
-                  <span className="material-symbols-outlined text-lg">{showNew ? "visibility_off" : "visibility"}</span>
+                  <AdminIcon name={showNew ? "visibility_off" : "visibility"} className="text-lg" />
                 </button>
               </div>
             </Field>
@@ -900,7 +901,7 @@ function AdminProfile() {
               <div className="relative">
                 <input className="admin-input pr-10" type={showConfirm ? "text" : "password"} value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} required minLength={6} autoComplete="new-password" />
                 <button type="button" onClick={() => setShowConfirm((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded text-admin-muted hover:text-admin-text transition-colors" tabIndex={-1}>
-                  <span className="material-symbols-outlined text-lg">{showConfirm ? "visibility_off" : "visibility"}</span>
+                  <AdminIcon name={showConfirm ? "visibility_off" : "visibility"} className="text-lg" />
                 </button>
               </div>
             </Field>
@@ -913,7 +914,7 @@ function AdminProfile() {
               <div className="relative">
                 <input className="admin-input pr-10" type={showNew ? "text" : "password"} value={newPwd} onChange={(e) => setNewPwd(e.target.value)} required minLength={6} autoComplete="new-password" />
                 <button type="button" onClick={() => setShowNew((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded text-admin-muted hover:text-admin-text transition-colors" tabIndex={-1}>
-                  <span className="material-symbols-outlined text-lg">{showNew ? "visibility_off" : "visibility"}</span>
+                  <AdminIcon name={showNew ? "visibility_off" : "visibility"} className="text-lg" />
                 </button>
               </div>
             </Field>
@@ -921,7 +922,7 @@ function AdminProfile() {
               <div className="relative">
                 <input className="admin-input pr-10" type={showConfirm ? "text" : "password"} value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} required minLength={6} autoComplete="new-password" />
                 <button type="button" onClick={() => setShowConfirm((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded text-admin-muted hover:text-admin-text transition-colors" tabIndex={-1}>
-                  <span className="material-symbols-outlined text-lg">{showConfirm ? "visibility_off" : "visibility"}</span>
+                  <AdminIcon name={showConfirm ? "visibility_off" : "visibility"} className="text-lg" />
                 </button>
               </div>
             </Field>
@@ -930,7 +931,7 @@ function AdminProfile() {
 
         <div className="flex justify-end pt-2 border-t border-admin-border/60">
           <button type="submit" className="admin-btn admin-btn-primary" disabled={savingPwd}>
-            <span className="material-symbols-outlined text-base mr-1">{savingPwd ? "hourglass_empty" : "lock"}</span>{savingPwd ? "Modification..." : (resetMode ? "Reinitialiser" : "Modifier le mot de passe")}
+            <AdminIcon name={savingPwd ? "hourglass_empty" : "lock"} className="text-base mr-1" />{savingPwd ? "Modification..." : (resetMode ? "Reinitialiser" : "Modifier le mot de passe")}
           </button>
         </div>
       </form>
@@ -941,7 +942,7 @@ function AdminProfile() {
           Connecte en tant que <span className="text-admin-text font-medium">{user?.email}</span>
         </p>
         <button onClick={logout} className="admin-btn admin-btn-danger">
-          <span className="material-symbols-outlined text-base mr-1">logout</span>Se deconnecter
+          <AdminIcon name="logout" className="text-base mr-1" />Se deconnecter
         </button>
       </div>
     </div>
@@ -951,7 +952,7 @@ function AdminProfile() {
 function AdminPage() {
   const { user, logout } = useAuth();
   const { mode, setMode } = useAdminTheme();
-  const { t } = useI18n();
+  const { t } = useAdminTranslations();
   const toast = useToast();
   const [tab, setTabState] = useState(() => {
     try { return localStorage.getItem("admin_tab") || "hero"; } catch { return "hero"; }
@@ -1024,7 +1025,7 @@ function AdminPage() {
               <div className="flex justify-between items-center">
                 <h2 className="font-headline-md text-headline-md text-admin-text">Contact</h2>
                 <button type="button" onClick={() => updateContact(contact)} className="admin-btn admin-btn-primary text-xs" disabled={savingContact}>
-                  <span className="material-symbols-outlined text-base mr-1">{savingContact ? "hourglass_empty" : "save"}</span>{savingContact ? "Sauvegarde..." : "Sauvegarder"}
+                  <AdminIcon name={savingContact ? "hourglass_empty" : "save"} className="text-base mr-1" />{savingContact ? "Sauvegarde..." : "Sauvegarder"}
                 </button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1036,7 +1037,6 @@ function AdminPage() {
               <div className="space-y-4 pt-2 border-t border-admin-border/60">
                 <h3 className="text-xs font-semibold text-admin-muted uppercase tracking-wide">{t("c_avail_loc")}</h3>
                 <div className="space-y-1">
-                  <label className="admin-label">{t("c_avail")} / {t("c_label_loc")}</label>
                   <input
                     className="admin-input w-full"
                     value={availLoc}
@@ -1064,7 +1064,7 @@ function AdminPage() {
               <div className="flex justify-between items-center">
                 <h2 className="font-headline-md text-headline-md text-admin-text">Footer</h2>
                 <button type="button" onClick={() => updateFooter(footer)} className="admin-btn admin-btn-primary text-xs" disabled={savingFooter}>
-                  <span className="material-symbols-outlined text-base mr-1">{savingFooter ? "hourglass_empty" : "save"}</span>{savingFooter ? "Sauvegarde..." : "Sauvegarder"}
+                  <AdminIcon name={savingFooter ? "hourglass_empty" : "save"} className="text-base mr-1" />{savingFooter ? "Sauvegarde..." : "Sauvegarder"}
                 </button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

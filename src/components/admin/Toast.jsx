@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, useRef } from "react";
+import AdminIcon from "./AdminIcon";
 
 const ToastContext = createContext(null);
 
@@ -48,11 +49,9 @@ export function ToastProvider({ children }) {
             onClick={() => remove(t.id)}
             className={`pointer-events-auto bg-admin-surface-raised border border-admin-border/60 border-l-[3px] ${accents[t.type]} rounded-lg shadow-xl cursor-pointer flex items-start gap-3 p-3 sm:p-4 animate-in`}
           >
-            <span className={`material-symbols-outlined text-lg shrink-0 mt-0.5 ${
-              t.type === "success" ? "text-emerald-400" : t.type === "error" ? "text-red-400" : "text-amber-400"
-            }`}>
-              {icons[t.type]}
-            </span>
+             <AdminIcon name={icons[t.type]} className={`text-lg shrink-0 mt-0.5 ${
+               t.type === "success" ? "text-emerald-400" : t.type === "error" ? "text-red-400" : "text-amber-400"
+             }`} />
             <span className="text-sm text-admin-text leading-snug flex-1">{t.message}</span>
           </div>
         ))}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAdminTheme } from "../../contexts/AdminThemeContext";
+import AdminIcon from "./AdminIcon";
 
 const TABS = [
   { key: "hero", label: "Entête", icon: "title" },
@@ -60,7 +61,7 @@ export default function AdminLayout({ title, onLogout, children, activeTab, onTa
                     : "text-admin-muted hover:text-admin-text hover:bg-admin-surface/80"
                 }`}
               >
-                <span className="material-symbols-outlined text-base">{tab.icon}</span>
+                <AdminIcon name={tab.icon} className="text-base" />
                 {tab.label}
               </button>
             );
@@ -71,14 +72,14 @@ export default function AdminLayout({ title, onLogout, children, activeTab, onTa
             onClick={() => setMode(mode === "dark" ? "light" : "dark")}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-admin-muted hover:text-admin-text hover:bg-admin-surface/80 transition-all"
           >
-            <span className="material-symbols-outlined text-base">{mode === "dark" ? "light_mode" : "dark_mode"}</span>
+            <AdminIcon name={mode === "dark" ? "light_mode" : "dark_mode"} className="text-base" />
             {mode === "dark" ? "Mode clair" : "Mode sombre"}
           </button>
           <button
             onClick={onLogout}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-admin-muted hover:text-admin-text hover:bg-admin-surface/80 transition-all"
           >
-            <span className="material-symbols-outlined text-base">logout</span>
+            <AdminIcon name="logout" className="text-base" />
             Déconnexion
           </button>
         </div>
@@ -91,7 +92,7 @@ export default function AdminLayout({ title, onLogout, children, activeTab, onTa
             className="w-11 h-11 flex items-center justify-center rounded-lg text-admin-text hover:bg-admin-surface/80 transition-colors"
             aria-label="Ouvrir le menu"
           >
-            <span className="material-symbols-outlined text-xl">menu</span>
+            <AdminIcon name="menu" className="text-xl" />
           </button>
           <h1 className="text-base font-semibold text-admin-text truncate">{title}</h1>
         </div>

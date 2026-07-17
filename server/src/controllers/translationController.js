@@ -1,122 +1,121 @@
 import prisma from "../config/prisma.js";
-import { createTranslationSchema, updateTranslationSchema } from "../middleware/validate.js";
-import { broadcastUpdate } from "./realtimeController.js";
 import { syncDbTranslations } from "../utils/dbTranslationSync.js";
+import { broadcastUpdate } from "./realtimeController.js";
 
 export const translationController = {
   getAll: async (req, res, next) => {
-    const items = await prisma.translation.findMany();
-    res.json({ status: "ok", data: items });
+    try {
+      const { language, key, source } = req.query;
+      const where = {};
+      if (language) where.language = language;
+      if (key) where.key = key;
+      if (source) where.source = source;
+      const items = await prisma.translation.findMany({ where, orderBy: { key: "asc" } });
+      res.json({ status: "ok", data: items });
+    } catch (e) {
+      next(e);
+    }
   },
 
   getByLanguage: async (req, res, next) => {
-    const { language } = req.params;
-    const items = await prisma.translation.findMany({
-      where: { language },
-    });
-    res.json({ status: "ok", data: items });
+    try {
+      const { language } = req.params;
+      const items = await prisma.translation.findMany({
+        where: { language },
+        orderBy: { key: "asc" },
+      });
+      res.json({ status: "ok", data: items });
+    } catch (e) {
+      next(e);
+    }
   },
 
   getByKey: async (req, res, next) => {
-    const { key } = req.params;
-    const { language } = req.query;
-    const where = { key };
-    if (language) {
-      where.language = language;
+    try {
+      const { key } = req.params;
+      const items = await prisma.translation.findMany({
+        where: { key },
+        orderBy: { language: "asc" },
+      });
+      res.json({ status: "ok", data: items });
+    } catch (e) {
+      next(e);
     }
-    const items = await prisma.translation.findMany({ where });
-    res.json({ status: "ok", data: items });
   },
 
   create: async (req, res, next) => {
-    const parsed = createTranslationSchema.safeParse(req.body);
-    if (!parsed.success) {
-      return res.status(400).json({ status: "error", errors: parsed.error.errors });
+    try {
+      const item = await prisma.translation.create({ data: req.body });
+      res.json({ status: "ok", data: item });
+    } catch (e) {
+      next(e);
     }
-    const data = await prisma.translation.create({
-      data: parsed.data,
-    });
-    res.status(201).json({ status: "ok", data });
-    broadcastUpdate("translations-updated");
-  },
-
-  update: async (req, res, next) => {
-    const { id } = req.params;
-    const parsed = updateTranslationSchema.safeParse(req.body);
-    if (!parsed.success) {
-      return res.status(400).json({ status: "error", errors: parsed.error.errors });
-    }
-    const data = await prisma.translation.update({
-      where: { id },
-      data: parsed.data,
-    });
-    res.json({ status: "ok", data });
-    broadcastUpdate("translations-updated");
   },
 
   upsert: async (req, res, next) => {
-    const { key, language, value } = req.body;
-    if (!key || !language || !value) {
-      return res.status(400).json({ status: "error", message: "key, language, value required" });
-    }
-    const existing = await prisma.translation.findMany({
-      where: { AND: [{ key }, { language }] },
-    });
-    let data;
-    if (existing.length) {
-      data = await prisma.translation.update({
-        where: { id: existing[0].id },
-        data: { value, updatedAt: new Date() },
+    try {
+      const { key, language, value, source } = req.body;
+      if (!key || !language) return res.status(400).json({ status: "error", message: "key and language required" });
+      const item = await prisma.translation.upsert({
+        where: { key_language: { key, language } },
+        create: { key, language, value: value || "", source: source || "manual" },
+        update: { value: value || "", source: source || "manual", updatedAt: new Date() },
       });
-    } else {
-      data = await prisma.translation.create({
-        data: { key, language, value },
-      });
+      res.json({ status: "ok", data: item });
+    } catch (e) {
+      next(e);
     }
-    res.json({ status: "ok", data });
-    broadcastUpdate("translations-updated");
-  },
-
-  delete: async (req, res, next) => {
-    const { id } = req.params;
-    const data = await prisma.translation.delete({
-      where: { id },
-    });
-    res.json({ status: "ok", data });
-    broadcastUpdate("translations-updated");
-  },
-
-  syncDbContent: async (req, res, next) => {
-    const result = await syncDbTranslations();
-    broadcastUpdate("translations-updated");
-    res.json({ status: "ok", data: result });
   },
 
   bulkUpsert: async (req, res, next) => {
-    const { language, translations: items } = req.body;
-    if (!language || !Array.isArray(items)) {
-      return res.status(400).json({ status: "error", message: "language and translations array required" });
+    try {
+      const { language, translations } = req.body;
+      if (!language || !Array.isArray(translations)) return res.status(400).json({ status: "error", message: "language and translations array required" });
+      const data = translations.map((t) => ({ key: t.key, language, value: t.value || "", source: "manual" }));
+      await prisma.translation.createMany({ data, skipDuplicates: true });
+      res.json({ status: "ok", data: { count: data.length } });
+    } catch (e) {
+      next(e);
     }
-    const results = [];
-    for (const item of items) {
-      const { key, value } = item;
-      const existing = await prisma.translation.findMany({
-        where: { AND: [{ key }, { language }] },
-      });
-      if (existing.length) {
-        const updated = await prisma.translation.update({
-          where: { id: existing[0].id },
-          data: { value, updatedAt: new Date() },
-        });
-        results.push(updated);
-      } else {
-        const created = await prisma.translation.create({
-          data: { key, language, value },
-        });
-        results.push(created);
-      }
+  },
+
+  syncDbContent: async (req, res, next) => {
+    try {
+      const result = await syncDbTranslations();
+      broadcastUpdate("translations-updated");
+      res.json({ status: "ok", data: result });
+    } catch (e) {
+      next(e);
     }
-    res.json({ status: "ok", data: results });
-    broadcastUpdate("translations-updated");
+  },
+
+  syncClean: async (req, res, next) => {
+    try {
+      const result = await syncDbTranslations();
+      broadcastUpdate("translations-updated");
+      res.json({ status: "ok", data: result });
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  update: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const item = await prisma.translation.update({ where: { id: Number(id) }, data: req.body });
+      res.json({ status: "ok", data: item });
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  delete: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await prisma.translation.delete({ where: { id: Number(id) } });
+      res.json({ status: "ok" });
+    } catch (e) {
+      next(e);
+    }
   },
 };

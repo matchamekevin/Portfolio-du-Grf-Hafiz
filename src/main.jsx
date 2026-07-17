@@ -5,28 +5,39 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { RealtimeProvider } from "./contexts/RealtimeContext";
 import App from "./App";
 import { ThemeProvider } from "./theme/ThemeContext";
-import { I18nProvider } from "./i18n/I18nContext";
+import { TranslationsProvider } from "./hooks/useTranslations.jsx";
 import { preloadData } from "./contexts/SiteDataContext";
-import { preloadTranslations } from "./i18n/I18nContext";
-import "@fontsource/material-symbols-outlined/latin-400.css";
+import { preloadTranslations } from "./hooks/useTranslations.jsx";
 import "./index.css";
 
 const preloaded = window.__PRELOADED__;
 delete window.__PRELOADED__;
 
+function clearSiteCache() {
+  try {
+    Object.keys(localStorage).forEach((k) => {
+      if (k === "site_data_cache" || k.startsWith("translations_cache_") || k === "lang") {
+        localStorage.removeItem(k);
+      }
+    });
+  } catch {}
+}
+
 Promise.all([
   preloadData(preloaded?.data).catch(() => {}),
   preloadTranslations(preloaded?.translations).catch(() => {}),
 ]).finally(() => {
+  clearSiteCache();
+  fetch("/api/translations/sync-clean", { method: "POST" }).catch(() => {});
   createRoot(document.getElementById("root")).render(
     <StrictMode>
       <BrowserRouter>
         <AuthProvider>
           <RealtimeProvider>
             <ThemeProvider>
-              <I18nProvider>
+              <TranslationsProvider>
                 <App />
-              </I18nProvider>
+              </TranslationsProvider>
             </ThemeProvider>
           </RealtimeProvider>
         </AuthProvider>

@@ -17,6 +17,7 @@ import authRoutes from "./routes/auth.js";
 import realtimeRoutes from "./routes/realtime.js";
 import trajectoireRoutes from "./routes/trajectoire.js";
 import publicRoutes from "./routes/public.js";
+import { syncDbTranslations } from "./utils/dbTranslationSync.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -69,5 +70,18 @@ if (config.nodeEnv === "production") {
 }
 
 app.use(errorHandler);
+
+const startSync = async () => {
+  try {
+    const result = await syncDbTranslations();
+    console.log(`[sync] translations synced: total=${result.total}, created=${result.created}`);
+  } catch (err) {
+    console.error("[sync] failed to sync translations:", err);
+  }
+};
+
+if (config.nodeEnv !== "production") {
+  startSync();
+}
 
 export default app;

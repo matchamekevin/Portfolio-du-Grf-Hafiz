@@ -19,6 +19,14 @@
     "airbyte-knowledge-mcp": {
       "type": "remote",
       "url": "https://airbyte.mcp.kapa.ai"
+    },
+    "playwright": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp@0.0.38"
+      ]
     }
   },
   "commit_message": {

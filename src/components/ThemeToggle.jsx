@@ -1,4 +1,5 @@
 import { useTheme } from "../theme/ThemeContext";
+import Icon from "./Icon";
 
 export default function ThemeToggle() {
   const { isLight, toggleTheme } = useTheme();
@@ -10,9 +11,7 @@ export default function ThemeToggle() {
       aria-label="Toggle theme"
       title="Thème clair / sombre"
     >
-      <span className="material-symbols-outlined text-base">
-        {isLight ? "dark_mode" : "light_mode"}
-      </span>
+      <Icon name={isLight ? "dark_mode" : "light_mode"} className="text-base" />
     </button>
   );
 }

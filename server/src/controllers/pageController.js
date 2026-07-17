@@ -17,6 +17,11 @@ function bgSync() {
   syncDbTranslations().catch(() => {});
 }
 
+function sanitizeContact(input) {
+  const clean = (v) => (typeof v === "string" ? v.replace(/[\s/@",._-]+$/, "").trim() : v);
+  return { ...input, availability: clean(input.availability), location: clean(input.location) };
+}
+
 export const contactController = {
   getAll: async (req, res, next) => {
     const items = await prisma.contactInfo.findMany({
@@ -64,7 +69,7 @@ export const contactController = {
     const existing = await prisma.contactInfo.findFirst();
     let data;
     if (existing) {
-      const parsed = updateContactSchema.safeParse(req.body);
+      const parsed = updateContactSchema.safeParse(sanitizeContact(req.body));
       if (!parsed.success) {
         return res.status(400).json({ status: "error", errors: parsed.error.errors });
       }
@@ -76,7 +81,7 @@ export const contactController = {
       publicController.invalidateCache();
       bgSync();
     } else {
-      const parsed = createContactSchema.safeParse(req.body);
+      const parsed = createContactSchema.safeParse(sanitizeContact(req.body));
       if (!parsed.success) {
         return res.status(400).json({ status: "error", errors: parsed.error.errors });
       }

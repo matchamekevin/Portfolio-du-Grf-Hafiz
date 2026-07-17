@@ -1,15 +1,15 @@
 import { ThemeProvider } from "../theme/ThemeContext";
-import { I18nProvider } from "../i18n/I18nContext";
+import { TranslationsProvider } from "../hooks/useTranslations.jsx";
 import { SiteDataProvider } from "./SiteDataContext";
 
 export function AppProviders({ children }) {
   return (
     <ThemeProvider>
-      <I18nProvider>
+      <TranslationsProvider>
         <SiteDataProvider>
           {children}
         </SiteDataProvider>
-      </I18nProvider>
+      </TranslationsProvider>
     </ThemeProvider>
   );
 }

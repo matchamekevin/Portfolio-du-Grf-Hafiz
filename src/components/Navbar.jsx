@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useI18n } from "../i18n/I18nContext";
+import { useTranslations } from "../hooks/useTranslations.jsx";
 import { useSiteData } from "../contexts/SiteDataContext";
 import ThemeToggle from "./ThemeToggle";
 import LanguageSwitcher from "./LanguageSwitcher";
+import Icon from "./Icon";
 
 const LINKS = [
   { href: "#showreel", key: "nav_showreel" },
@@ -12,7 +13,7 @@ const LINKS = [
 ];
 
 export default function Navbar() {
-  const { t } = useI18n();
+  const { t } = useTranslations();
   const { footer } = useSiteData();
   const siteName = footer?.name || "Portfolio";
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -29,10 +30,21 @@ export default function Navbar() {
     document.getElementById(href.slice(1))?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToTop = () => {
+    setMobileOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <header className="w-full top-0 sticky z-50 bg-surface-dim/80 border-b border-outline-variant/30 backdrop-blur-md transition-all duration-300">
       <div className="flex justify-between items-center h-14 sm:h-16 px-sm sm:px-md max-w-container-max mx-auto gap-sm sm:gap-base">
-        <div className="font-headline-md text-headline-md text-primary tracking-tighter uppercase font-bold cursor-pointer hover:scale-105 transition-transform">
+        <div
+          className="font-headline-md text-headline-md text-primary tracking-tighter uppercase font-bold cursor-pointer hover:scale-105 transition-transform"
+          onClick={scrollToTop}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === "Enter") scrollToTop(); }}
+        >
           {siteName}
         </div>
         <nav className="hidden md:flex items-center gap-lg">
@@ -62,7 +74,7 @@ export default function Navbar() {
             onClick={() => setMobileOpen((o) => !o)}
             aria-label="Menu"
           >
-            <span className="material-symbols-outlined text-xl">{mobileOpen ? "close" : "menu"}</span>
+            <Icon name={mobileOpen ? "close" : "menu"} className="text-xl" />
           </button>
         </div>
       </div>
